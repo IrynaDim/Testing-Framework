@@ -25,7 +25,7 @@ public class Synchronize {
     }
 
 
-    public WebElement clickableCustomWait(WebElement element) {
+    protected WebElement clickableCustomWait(WebElement element) {
         disableImplicitWait();
         WebElement ele = wait.until(ExpectedConditions.elementToBeClickable(element));
         enableImplicitWait();

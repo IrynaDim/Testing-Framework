@@ -27,13 +27,11 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testNg.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -46,8 +44,6 @@
             <artifactId>extentreports</artifactId>
             <version>3.0.1</version>
         </dependency>
-
-
     </dependencies>
 
 </project>

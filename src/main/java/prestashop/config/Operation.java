@@ -1,10 +1,10 @@
 package prestashop.config;
 
 import com.aventstack.extentreports.ExtentTest;
-import prestashop.exception.FailTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import prestashop.exception.FailTest;
 
 public class Operation extends Synchronize {
 
@@ -35,4 +35,65 @@ public class Operation extends Synchronize {
         }
     }
 
+    public <T> void insertTextToElement(T element, String textToEnter) {
+
+        try {
+            if (element.getClass().getName().contains("By")) {
+                WebElement foundElement = elementDisplayed(DriverProvider.getInstance().getDriver().findElement((By) element));
+                foundElement.sendKeys(textToEnter);
+                getLog().info("Typed this text : " + textToEnter);
+            } else {
+                elementDisplayed((WebElement) element).sendKeys(textToEnter);
+                getLog().info("Typed this text : " + textToEnter);
+            }
+
+        } catch (NoSuchElementException e) {
+            getLog().fail("Element is not Found");
+            throw new FailTest(e);
+        } catch (Exception e1) {
+            getLog().fail("Unable to click element");
+            throw new FailTest(e1);
+        }
+    }
+
+    public <T> String getTextFromElement(T element, String textToEnter) {
+
+        try {
+            if (element.getClass().getName().contains("By")) {
+                WebElement foundElement = elementDisplayed(DriverProvider.getInstance().getDriver().findElement((By) element));
+                String text = foundElement.getText();
+                getLog().info("Fetched this text : " + text);
+                return text;
+            } else {
+                String text = elementDisplayed((WebElement) element).getText();
+                getLog().info("Fetched this text : " + text);
+                return text;
+            }
+
+        } catch (NoSuchElementException e) {
+            getLog().fail("This element is not Found");
+            throw new FailTest(e);
+        } catch (Exception e1) {
+            getLog().fail("Unable to fetch text to this element");
+            throw new FailTest(e1);
+        }
+
+    }
+
+    public void switchToFrameLive() {
+        try {
+            DriverProvider.getInstance().getDriver().switchTo().defaultContent();
+            getLog().info("Switched to default frame");
+            DriverProvider.getInstance().getDriver().switchTo().frame(elementDisplayed(DriverProvider.getInstance().getDriver()
+                    .findElement(By.id("framelive"))));
+            getLog().info("Switched to framelive");
+
+        } catch (NoSuchElementException e) {
+            getLog().fail("This frame is not Found");
+            throw new FailTest(e);
+        } catch (Exception e1) {
+            getLog().fail("Unable to switched to the frame");
+            throw new FailTest(e1);
+        }
+    }
 }
