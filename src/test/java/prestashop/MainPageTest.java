@@ -8,8 +8,11 @@ import static org.testng.AssertJUnit.assertTrue;
 public class MainPageTest extends BaseTest {
 
     @Test
-    public void checkLanguageSize() {
-        assertTrue(softAssertion.compareObjects(mainPage.getLanguages().size(), 46));
+    public void checkUkrainianLanguageExist() {
+        assertTrue(softAssertion.compareObjects(mainPage.getLanguages().stream()
+                .filter(l -> l.getText()
+                        .equals("Українська"))
+                .count(), 1L));
     }
 
     @Test
@@ -33,10 +36,7 @@ public class MainPageTest extends BaseTest {
 
 
     @Test
-    public void checkUkrainianLanguageExist() {
-        assertTrue(softAssertion.compareObjects(mainPage.getLanguages().stream()
-                .filter(l -> l.getText()
-                        .equals("Українська"))
-                .count(), 1L));
+    public void checkLanguageSize() {
+        assertTrue(softAssertion.compareObjects(mainPage.getLanguages().size(), 46));
     }
 }

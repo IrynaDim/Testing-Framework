@@ -4,8 +4,19 @@ import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import prestashop.model.Browser;
+import prestashop.util.PropertyReader;
+
+import java.io.File;
 
 public class Factory {
+    private static final String DRIVER_PATH = "src/main/resources/";
+    private static final String RESOLUTION_REGEX = "\\d+x\\d+";
+    private static final String browserProperty = "browser";
+    private static final String resolutionProperty = "resolution";
+
     private Factory() {
 
     }
@@ -15,10 +26,27 @@ public class Factory {
     public static final ThreadLocal<ExtentTest> logger = new ThreadLocal<>();
 
     private static final ThreadLocal<WebDriver> driver = ThreadLocal.withInitial(() -> {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--remote-allow-origins=*");
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        return new ChromeDriver(chromeOptions);
+        String resolution = PropertyReader.getProperty(resolutionProperty);
+        String browserValue = PropertyReader.getProperty(browserProperty);
+
+        checkResolution(resolution);
+        checkBrowser(browserValue);
+
+        Browser browser = Browser.valueOf(browserValue);
+        File file;
+        if (browser == Browser.CHROME) {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("--remote-allow-origins=*");
+            chromeOptions.addArguments("--window-size=" + resolution);
+            file = new File(DRIVER_PATH + "drivers/chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
+            return new ChromeDriver(chromeOptions);
+        }
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        firefoxOptions.addPreference("resolution", resolution);
+        file = new File(DRIVER_PATH + "drivers/geckodriver.exe");
+        System.setProperty("webdriver.gecko.driver", file.getAbsolutePath());
+        return new FirefoxDriver(firefoxOptions);
     });
 
     public static Factory getInstance() {
@@ -32,5 +60,19 @@ public class Factory {
     public void removeDriver() {
         driver.get().quit();
         driver.remove();
+    }
+
+    private static void checkResolution(String resolution) {
+        if (!resolution.matches(RESOLUTION_REGEX)) {
+            throw new RuntimeException("You pass not correct resolution to driver: " + resolution);
+        }
+    }
+
+    private static void checkBrowser(String browserValue) {
+        try {
+            Browser.valueOf(browserValue);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("You pass not correct browser value: " + browserValue);
+        }
     }
 }
