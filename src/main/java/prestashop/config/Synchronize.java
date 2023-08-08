@@ -45,7 +45,6 @@ public class Synchronize {
     }
 
     public WebElement elementDisplayed(WebElement element) {
-        System.out.println("Synchronize class " + toString() + " Tread " + Thread.currentThread().getId());
         disableImplicitWait();
         WebElement ele = wait.until(ExpectedConditions.visibilityOf(element));
         enableImplicitWait();
@@ -53,7 +52,6 @@ public class Synchronize {
     }
 
     public List<WebElement> elementsDisplayed(List<WebElement> elements) {
-        System.out.println("Synchronize class " + toString() + " Tread " + Thread.currentThread().getId());
         disableImplicitWait();
         List<WebElement> results = wait.until(ExpectedConditions.visibilityOfAllElements(elements));
         enableImplicitWait();
