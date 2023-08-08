@@ -5,12 +5,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-public class DriverProvider {
-    private DriverProvider() {
+public class Factory {
+    private Factory() {
 
     }
 
-    private static final DriverProvider instance = new DriverProvider();
+    private static final Factory instance = new Factory();
 
     public static final ThreadLocal<ExtentTest> logger = new ThreadLocal<>();
 
@@ -21,7 +21,7 @@ public class DriverProvider {
         return new ChromeDriver(chromeOptions);
     });
 
-    public static DriverProvider getInstance() {
+    public static Factory getInstance() {
         return instance;
     }
 

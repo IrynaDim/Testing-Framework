@@ -3,14 +3,14 @@ package prestashop.pages;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import prestashop.config.DriverProvider;
+import prestashop.config.Factory;
 
 import java.util.List;
 
 public class MainPage extends BasePage {
 
     public MainPage() {
-        PageFactory.initElements(DriverProvider.getInstance().getDriver(), this);
+        PageFactory.initElements(Factory.getInstance().getDriver(), this);
     }
 
     @FindBy(xpath = "//p[@id='block-newsletter-label']")

@@ -14,15 +14,15 @@ public class Synchronize {
     WebDriverWait wait;
 
     Synchronize() {
-        wait = new WebDriverWait(DriverProvider.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
+        wait = new WebDriverWait(Factory.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
     }
 
     private void disableImplicitWait() {
-        DriverProvider.getInstance().getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        Factory.getInstance().getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
     }
 
     private void enableImplicitWait() {
-        DriverProvider.getInstance().getDriver().manage().timeouts().implicitlyWait(waitDuration, TimeUnit.SECONDS);
+        Factory.getInstance().getDriver().manage().timeouts().implicitlyWait(waitDuration, TimeUnit.SECONDS);
     }
 
 

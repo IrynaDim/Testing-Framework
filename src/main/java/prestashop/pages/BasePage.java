@@ -1,12 +1,12 @@
 package prestashop.pages;
 
-import prestashop.config.Operation;
+import prestashop.config.SoftWebElementAction;
 
 public abstract class BasePage {
 
-    protected Operation operation;
+    protected SoftWebElementAction operation;
 
     BasePage() {
-        operation = new Operation();
+        operation = new SoftWebElementAction();
     }
 }
