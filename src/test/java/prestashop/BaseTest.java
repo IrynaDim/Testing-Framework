@@ -13,8 +13,8 @@ import prestashop.pages.MainPage;
 import java.lang.reflect.Method;
 
 public class BaseTest extends Reporting {
-    protected MainPage mainPage;
     protected final SoftAssertion softAssertion = new SoftAssertion();
+    protected MainPage mainPage;
 
     @BeforeSuite
     public void startReporting() {
@@ -28,10 +28,10 @@ public class BaseTest extends Reporting {
 
     @BeforeMethod
     public void beforeTest(Method result) {
-        mainPage = new MainPage();
         Factory.getInstance().getDriver().get("https://demo.prestashop.com/#/en/front");
         ExtentTest test = report.createTest(result.getName());
         Factory.logger.set(test);
+        mainPage = new MainPage();
     }
 
     @AfterMethod

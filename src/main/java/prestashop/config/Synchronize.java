@@ -1,6 +1,7 @@
 package prestashop.config;
 
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -9,12 +10,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Synchronize {
-
     private final long waitDuration = 30;
-    WebDriverWait wait;
+    protected WebDriverWait wait;
+    protected Actions actions;
 
-    Synchronize() {
+    public Synchronize() {
         wait = new WebDriverWait(Factory.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
+        actions = new Actions(Factory.getInstance().getDriver());
     }
 
     private void disableImplicitWait() {
@@ -43,6 +45,7 @@ public class Synchronize {
     }
 
     public WebElement elementDisplayed(WebElement element) {
+        System.out.println("Synchronize class " + toString() + " Tread " + Thread.currentThread().getId());
         disableImplicitWait();
         WebElement ele = wait.until(ExpectedConditions.visibilityOf(element));
         enableImplicitWait();
@@ -50,6 +53,7 @@ public class Synchronize {
     }
 
     public List<WebElement> elementsDisplayed(List<WebElement> elements) {
+        System.out.println("Synchronize class " + toString() + " Tread " + Thread.currentThread().getId());
         disableImplicitWait();
         List<WebElement> results = wait.until(ExpectedConditions.visibilityOfAllElements(elements));
         enableImplicitWait();

@@ -6,8 +6,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import prestashop.exception.FailTest;
 
-import java.util.List;
-
 public class SoftWebElementAction extends Synchronize {
 
     public ExtentTest getLog() {
@@ -83,6 +81,7 @@ public class SoftWebElementAction extends Synchronize {
     }
 
     public void switchToFrameLive() {
+
         try {
             Factory.getInstance().getDriver().switchTo().defaultContent();
             getLog().info("Switched to default frame");
@@ -95,6 +94,26 @@ public class SoftWebElementAction extends Synchronize {
             throw new FailTest(e);
         } catch (Exception e1) {
             getLog().fail("Unable to switched to the frame");
+            throw new FailTest(e1);
+        }
+    }
+
+    public <T> void moveToElement(T element) {
+        try {
+            if (element.getClass().getName().contains("By")) {
+                WebElement foundElement = elementDisplayed(Factory.getInstance().getDriver().findElement((By) element));
+                actions.moveToElement(elementDisplayed(foundElement)).perform();
+            } else {
+                actions.moveToElement(elementDisplayed((WebElement) element)).perform();
+
+            }
+            getLog().info("Moved to element");
+
+        } catch (NoSuchElementException e) {
+            getLog().fail("No such element");
+            throw new FailTest(e);
+        } catch (Exception e1) {
+            getLog().fail("Unable to move to the element");
             throw new FailTest(e1);
         }
     }
