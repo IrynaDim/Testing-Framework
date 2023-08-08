@@ -8,6 +8,11 @@ import static org.testng.AssertJUnit.assertTrue;
 public class MainPageTest extends BaseTest {
 
     @Test
+    public void checkLanguageSize() {
+        assertTrue(softAssertion.compareObjects(mainPage.getLanguages().size(), 46));
+    }
+
+    @Test
     public void checkSubscribeText() {
         String emailSubscribeElement = mainPage.getEmailSubscribeText();
         assertTrue(softAssertion.compareObjects("Get our latest news and special sales", emailSubscribeElement));
@@ -26,10 +31,6 @@ public class MainPageTest extends BaseTest {
         assertTrue(softAssertion.compareObjects("SUBSCRIBE", text));
     }
 
-    @Test
-    public void checkLanguageSize() {
-        assertTrue(softAssertion.compareObjects(mainPage.getLanguages().size(), 46));
-    }
 
     @Test
     public void checkUkrainianLanguageExist() {
