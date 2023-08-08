@@ -16,12 +16,12 @@ public class Operation extends Synchronize {
 
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = DriverProvider.getInstance().getDriver().findElement((By) element);
+                WebElement foundElement = elementDisplayed(DriverProvider.getInstance().getDriver().findElement((By) element));
                 WebElement ele = clickableCustomWait(foundElement);
                 ele.click();
                 getLog().info("Clicked element : " + elementName);
             } else {
-                WebElement ele = clickableCustomWait((WebElement) element);
+                WebElement ele = clickableCustomWait(elementDisplayed((WebElement) element));
                 ele.click();
                 getLog().info("Clicked element : " + elementName);
             }

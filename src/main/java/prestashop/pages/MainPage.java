@@ -65,14 +65,32 @@ public class MainPage extends BasePage {
     private WebElement productsInShoppingCart;
 
 
-    public String getEmailSubscribeElement() {
-        op.switchToFrameLive();
-        return op.getTextFromElement(emailSubscribeText, "email subscribe text");
+    public String getEmailSubscribeText() {
+        operation.switchToFrameLive();
+        return operation.getTextFromElement(emailSubscribeText, "email subscribe text");
     }
 
-    public String getUnsubscribeElement() {
-        op.switchToFrameLive();
-        return op.getTextFromElement(unsubscribeText, "unsubscribe text");
+    public String getUnsubscribeText() {
+        operation.switchToFrameLive();
+        return operation.getTextFromElement(unsubscribeText, "unsubscribe text");
+    }
+
+    public String getSubscribeButtonText() {
+        operation.switchToFrameLive();
+        WebElement sb = operation.elementDisplayed(subscribeButton);
+        String textTransform = sb.getCssValue("text-transform");
+        String text = sb.getAttribute("defaultValue");
+        if (textTransform.equalsIgnoreCase("uppercase")) {
+            return text.toUpperCase();
+        } else {
+            return text;
+        }
+    }
+
+    public List<WebElement> getLanguages() {
+        operation.switchToFrameLive();
+        operation.clickElement(languageButton, "language button");
+        return operation.elementsDisplayed(languages);
     }
 
 //
@@ -121,26 +139,12 @@ public class MainPage extends BasePage {
 //        searchButton.sendKeys(Keys.ENTER);
 //    }
 //
-//    public List<WebElement> getLanguages() {
-//        driver.switchTo().defaultContent();
-//        driver.switchTo().frame(framelive);
-//        wait.until(ExpectedConditions.visibilityOf(languageButton)).click();
-//        wait.until(new ListWaiter(languages));
-//        return languages;
-//    }
 //
 //    public List<WebElement> getPopularClothes() {
 //        driver.switchTo().defaultContent();
 //        driver.switchTo().frame(framelive);
 //        wait.until(ExpectedConditions.visibilityOfAllElements(popularClothes));
 //        return popularClothes;
-//    }
-//
-//    public WebElement getSubscribeButtonElement() {
-//        driver.switchTo().defaultContent();
-//        driver.switchTo().frame(framelive);
-//        wait.until(ExpectedConditions.visibilityOf(subscribeButton));
-//        return subscribeButton;
 //    }
 //
 //

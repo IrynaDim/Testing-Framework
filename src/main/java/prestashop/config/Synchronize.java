@@ -5,6 +5,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Synchronize {
@@ -46,6 +47,13 @@ public class Synchronize {
         WebElement ele = wait.until(ExpectedConditions.visibilityOf(element));
         enableImplicitWait();
         return ele;
+    }
+
+    public List<WebElement> elementsDisplayed(List<WebElement> elements) {
+        disableImplicitWait();
+        List<WebElement> results = wait.until(ExpectedConditions.visibilityOfAllElements(elements));
+        enableImplicitWait();
+        return results;
     }
 
 }
