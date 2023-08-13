@@ -9,8 +9,10 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+// название класса вводит в заблуждение.
+// Я бы назвал WaitUtil например, чтобы было понятно что делает класс
 public class Synchronize {
-    private final long waitDuration = 30;
+    private final long waitDuration = 50;
     protected WebDriverWait wait;
     protected Actions actions;
 

@@ -125,6 +125,7 @@ public class MainPage extends BasePage {
         return dropDownMenu;
     }
 
+    //лучше вынести в отдельный класс, можно оформить в виде билдера
     private Product createProduct(String[] prices, String name) {
         String currentPriceValue = prices[0];
         String currentCurrency = currentPriceValue.substring(0, 1);

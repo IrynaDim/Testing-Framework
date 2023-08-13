@@ -2,9 +2,12 @@ package prestashop;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
@@ -18,10 +21,16 @@ import prestashop.util.CreateLink;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 public class BaseTest extends Reporting {
     protected final SoftAssertion softAssertion = new SoftAssertion();
-    protected MainPage mainPage;
+
+    //проблема в том, что разные потоки по очереди перезаписывали mainPage переменную, поэтому падали тесты
+    //  можно создавать и хранить в мапе разные инстансы mainPage для разных потоков
+    private static final Map<Long, MainPage> pageInstances = new ConcurrentHashMap<>();
 
     @BeforeSuite
     public void startReporting() {
@@ -38,11 +47,12 @@ public class BaseTest extends Reporting {
         Factory.getInstance().getDriver().get("https://demo.prestashop.com/#/en/front");
         ExtentTest test = report.createTest(result.getName());
         Factory.logger.set(test);
-        mainPage = new MainPage();
+        pageInstances.putIfAbsent(Thread.currentThread().getId(), new MainPage());
+//        mainPage = new MainPage();
     }
 
     @AfterMethod
-    public void afterTest() {
+    public void afterTest(Method result) {
         String status = Factory.logger.get().getStatus().toString();
         System.out.println(status);
         if (status.equals("fail")) {
@@ -51,10 +61,15 @@ public class BaseTest extends Reporting {
 
         Factory.getInstance().removeDriver();
         Factory.logger.remove();
+        pageInstances.remove(Thread.currentThread().getId());
+    }
+
+    public MainPage getMainPage(){
+        return pageInstances.get(Thread.currentThread().getId());
     }
 
     private synchronized void captureScreenshot() {
-        String path = System.getProperty("user.dir")+"/result/screeshot" + Math.random() + ".jpg";
+        String path = System.getProperty("user.dir") + "/result/screeshot" + Math.random() + ".jpg";
         File sourceFile = ((TakesScreenshot) Factory.getInstance().getDriver()).getScreenshotAs(OutputType.FILE);
 
         try {
