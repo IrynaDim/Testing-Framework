@@ -71,14 +71,14 @@ public class MainPageTest extends BaseTest {
         assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "HOME ACCESSORIES");
     }
 
-    @Test
+    @Test // firefox
     public void checkHoverClothesButton_notEmptyListOfClothes() {
         DriverFactory.getInstance().getDriver().navigate().refresh();
         List<String> clothesHoverElements = getMainPage().getClothesHoverElements().stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
         clothesHoverElements.removeIf(String::isEmpty);
-        assertEquals("Clothes hover element list contains " + createStringFromList(clothesHoverElements), clothesHoverElements.size(), 2);
+        assertEquals("Clothes hover element list contains: " + createStringFromList(clothesHoverElements), clothesHoverElements.size(), 2);
         assertEquals("First element is " + clothesHoverElements.get(0), clothesHoverElements.get(0), "MEN");
         assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "WOMEN");
     }
