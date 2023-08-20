@@ -3,18 +3,15 @@ package prestashop;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import prestashop.config.Factory;
 import prestashop.config.Reporting;
-import prestashop.config.SoftAssertion;
 import prestashop.pages.MainPage;
 import prestashop.util.CreateLink;
 
@@ -26,10 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class BaseTest extends Reporting {
-    protected final SoftAssertion softAssertion = new SoftAssertion();
-
-    //проблема в том, что разные потоки по очереди перезаписывали mainPage переменную, поэтому падали тесты
-    //  можно создавать и хранить в мапе разные инстансы mainPage для разных потоков
     private static final Map<Long, MainPage> pageInstances = new ConcurrentHashMap<>();
 
     @BeforeSuite
@@ -48,7 +41,6 @@ public class BaseTest extends Reporting {
         ExtentTest test = report.createTest(result.getName());
         Factory.logger.set(test);
         pageInstances.putIfAbsent(Thread.currentThread().getId(), new MainPage());
-//        mainPage = new MainPage();
     }
 
     @AfterMethod

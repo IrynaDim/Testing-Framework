@@ -8,10 +8,10 @@ import prestashop.model.Product;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import static org.testng.AssertJUnit.*;
-
 
 public class MainPageTest extends BaseTest {
 
@@ -23,17 +23,14 @@ public class MainPageTest extends BaseTest {
                 .filter(l -> l.getText()
                         .equals("Українська"))
                 .count();
-        //не очень понятно что там сравнивается,
-        // я бы использовал или AssertJ c сообщением в случае ошибки
-        // или же сделал метод с понятным названием и туда помеситл ассерт
-        assertTrue(softAssertion.compareObjects(size, 1L, size + ""));
+        assertEquals("No ukrainian language in the list." + size, size, 1L);
     }
 
     @Test
     public void checkLanguageSize() {
         Factory.getInstance().getDriver().navigate().refresh();
         List<WebElement> languages = getMainPage().getLanguages();
-        assertTrue(softAssertion.compareObjects(languages.size(), 46, languages.size() + ""));
+        assertEquals("Language size is " + languages.size(), languages.size(), 46);
     }
 
     @Test
@@ -43,23 +40,23 @@ public class MainPageTest extends BaseTest {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
         clothesHoverElements.removeIf(String::isEmpty);
-        System.out.println(clothesHoverElements.size());
-        assertTrue(softAssertion.compareObjects(clothesHoverElements.size(), 0, clothesHoverElements.size() + ""));
+        assertEquals("ClothesHoverElements contains " + createStringFromList(clothesHoverElements),
+                clothesHoverElements.size(), 0);
     }
 
     @Test
     public void checkUnSubscribeText() {
         Factory.getInstance().getDriver().navigate().refresh();
         String unsubscribeElement = getMainPage().getUnsubscribeText();
-        assertTrue(softAssertion.compareObjects("You may unsubscribe at any moment. " +
-                "For that purpose, please find our contact info in the legal notice.", unsubscribeElement, unsubscribeElement));
+        assertEquals("Unsubscribe element text is " + unsubscribeElement, "You may unsubscribe at any moment. " +
+                "For that purpose, please find our contact info in the legal notice.", unsubscribeElement);
     }
 
     @Test
     public void checkSubscribeText() {
         Factory.getInstance().getDriver().navigate().refresh();
         String emailSubscribeElement = getMainPage().getEmailSubscribeText();
-        assertTrue(softAssertion.compareObjects("Get our latest news and special sales", emailSubscribeElement, emailSubscribeElement));
+        assertEquals("Email subscribe element text is " + emailSubscribeElement, "Get our latest news and special sales", emailSubscribeElement);
     }
 
     @Test
@@ -69,9 +66,10 @@ public class MainPageTest extends BaseTest {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
         clothesHoverElements.removeIf(String::isEmpty);
-        assertTrue(softAssertion.compareObjects(clothesHoverElements.size(), 2, clothesHoverElements.size() + ""));
-        assertTrue(softAssertion.compareObjects(clothesHoverElements.get(0), "STATIONERY", clothesHoverElements.get(0)));
-        assertTrue(softAssertion.compareObjects(clothesHoverElements.get(1), "HOME ACCESSORIES", clothesHoverElements.get(1)));
+        System.out.println(clothesHoverElements.size());
+        assertEquals("Clothes hover element list contains " + createStringFromList(clothesHoverElements), clothesHoverElements.size(), 2);
+        assertEquals("First element is " + clothesHoverElements.get(0), clothesHoverElements.get(0), "STATIONERY");
+        assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "HOME ACCESSORIES");
     }
 
     @Test
@@ -81,16 +79,16 @@ public class MainPageTest extends BaseTest {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
         clothesHoverElements.removeIf(String::isEmpty);
-        assertTrue(softAssertion.compareObjects(clothesHoverElements.size(), 2, clothesHoverElements.size() + ""));
-        assertTrue(softAssertion.compareObjects(clothesHoverElements.get(0), "MEN", clothesHoverElements.get(0)));
-        assertTrue(softAssertion.compareObjects(clothesHoverElements.get(1), "WOMEN", clothesHoverElements.get(1)));
+        assertEquals("Clothes hover element list contains " + createStringFromList(clothesHoverElements), clothesHoverElements.size(), 2);
+        assertEquals("First element is " + clothesHoverElements.get(0), clothesHoverElements.get(0), "MEN");
+        assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "WOMEN");
     }
 
     @Test
     public void checkSubscribeButtonText_upperCase() {
         Factory.getInstance().getDriver().navigate().refresh();
         String text = getMainPage().getSubscribeButtonText();
-        assertTrue(softAssertion.compareObjects("SUBSCRIBE", text, text));
+        assertEquals("Text on subscribe button is " + text, "SUBSCRIBE", text);
     }
 
     @Test
@@ -106,5 +104,13 @@ public class MainPageTest extends BaseTest {
             assertNotNull(p.getPrice());
             assertTrue(p.getPrice() > 0.00);
         });
+    }
+
+    private String createStringFromList(List<String> list) {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (String element : list) {
+            joiner.add(element);
+        }
+        return joiner.toString();
     }
 }

@@ -6,7 +6,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import prestashop.exception.FailTest;
 
-public class SoftWebElementAction extends Synchronize {
+public class SoftWebElementAction extends WaitUtil {
 
     public ExtentTest getLog() {
         return Factory.logger.get();
