@@ -1,8 +1,6 @@
 package prestashop.pages;
 
-import org.openqa.selenium.interactions.Actions;
-import prestashop.config.Factory;
-import prestashop.config.SoftWebElementAction;
+import prestashop.util.SoftWebElementAction;
 
 public abstract class BasePage {
 

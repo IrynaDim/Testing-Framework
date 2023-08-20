@@ -1,13 +1,6 @@
-package prestashop.service;
+package prestashop.pageActions;
 
 import lombok.extern.slf4j.Slf4j;
-import prestashop.model.Product;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import prestashop.pages.MainPage;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class MainService {

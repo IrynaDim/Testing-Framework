@@ -1,4 +1,4 @@
-package prestashop.config;
+package prestashop.util;
 
 
 
@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import prestashop.config.DriverFactory;
 
 import java.time.Duration;
 import java.util.List;
@@ -17,16 +18,16 @@ public class WaitUtil {
     protected Actions actions;
 
     public WaitUtil() {
-        wait = new WebDriverWait(Factory.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
-        actions = new Actions(Factory.getInstance().getDriver());
+        wait = new WebDriverWait(DriverFactory.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
+        actions = new Actions(DriverFactory.getInstance().getDriver());
     }
 
     private void disableImplicitWait() {
-        Factory.getInstance().getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        DriverFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
     }
 
     private void enableImplicitWait() {
-        Factory.getInstance().getDriver().manage().timeouts().implicitlyWait(waitDuration, TimeUnit.SECONDS);
+        DriverFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(waitDuration, TimeUnit.SECONDS);
     }
 
 

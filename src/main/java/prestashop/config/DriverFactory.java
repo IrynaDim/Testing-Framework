@@ -1,6 +1,5 @@
 package prestashop.config;
 
-import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -11,19 +10,29 @@ import prestashop.util.PropertyReader;
 
 import java.io.File;
 
-public class Factory {
+public class DriverFactory {
     private static final String DRIVER_PATH = "src/main/resources/";
     private static final String RESOLUTION_REGEX = "\\d+x\\d+";
     private static final String browserProperty = "browser";
     private static final String resolutionProperty = "resolution";
+    private static final DriverFactory instance = new DriverFactory();
 
-    private Factory() {
+    private DriverFactory() {
 
     }
 
-    private static final Factory instance = new Factory();
+    public static DriverFactory getInstance() {
+        return instance;
+    }
 
-    public static final ThreadLocal<ExtentTest> logger = new ThreadLocal<>();
+    public WebDriver getDriver() {
+        return driver.get();
+    }
+
+    public void removeDriver() {
+        driver.get().quit();
+        driver.remove();
+    }
 
     private static final ThreadLocal<WebDriver> driver = ThreadLocal.withInitial(() -> {
         String resolution = PropertyReader.getProperty(resolutionProperty);
@@ -48,19 +57,6 @@ public class Factory {
         System.setProperty("webdriver.gecko.driver", file.getAbsolutePath());
         return new FirefoxDriver(firefoxOptions);
     });
-
-    public static Factory getInstance() {
-        return instance;
-    }
-
-    public WebDriver getDriver() {
-        return driver.get();
-    }
-
-    public void removeDriver() {
-        driver.get().quit();
-        driver.remove();
-    }
 
     private static void checkResolution(String resolution) {
         if (!resolution.matches(RESOLUTION_REGEX)) {

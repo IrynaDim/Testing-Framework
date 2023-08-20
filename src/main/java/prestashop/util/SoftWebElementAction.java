@@ -1,22 +1,24 @@
-package prestashop.config;
+package prestashop.util;
 
 import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import prestashop.exception.FailTest;
+import prestashop.config.DriverFactory;
+import prestashop.config.LoggerFactory;
 
 public class SoftWebElementAction extends WaitUtil {
 
     public ExtentTest getLog() {
-        return Factory.logger.get();
+        return LoggerFactory.logger.get();
     }
 
     public <T> void clickElement(T element, String elementName) {
 
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = elementDisplayed(Factory.getInstance().getDriver().findElement((By) element));
+                WebElement foundElement = elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
                 WebElement ele = clickableCustomWait(foundElement);
                 ele.click();
                 getLog().info("Clicked element : " + elementName);
@@ -39,7 +41,7 @@ public class SoftWebElementAction extends WaitUtil {
 
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = elementDisplayed(Factory.getInstance().getDriver().findElement((By) element));
+                WebElement foundElement = elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
                 foundElement.sendKeys(textToEnter);
                 getLog().info("Typed this text : " + textToEnter);
             } else {
@@ -57,10 +59,9 @@ public class SoftWebElementAction extends WaitUtil {
     }
 
     public <T> String getTextFromElement(T element, String textToEnter) {
-
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = elementDisplayed(Factory.getInstance().getDriver().findElement((By) element));
+                WebElement foundElement = elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
                 String text = foundElement.getText();
                 getLog().info("Fetched this text : " + text);
                 return text;
@@ -83,9 +84,9 @@ public class SoftWebElementAction extends WaitUtil {
     public void switchToFrameLive() {
 
         try {
-            Factory.getInstance().getDriver().switchTo().defaultContent();
+            DriverFactory.getInstance().getDriver().switchTo().defaultContent();
             getLog().info("Switched to default frame");
-            Factory.getInstance().getDriver().switchTo().frame(elementDisplayed(Factory.getInstance().getDriver()
+            DriverFactory.getInstance().getDriver().switchTo().frame(elementDisplayed(DriverFactory.getInstance().getDriver()
                     .findElement(By.id("framelive"))));
             getLog().info("Switched to framelive");
 
@@ -101,7 +102,7 @@ public class SoftWebElementAction extends WaitUtil {
     public <T> void moveToElement(T element) {
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = elementDisplayed(Factory.getInstance().getDriver().findElement((By) element));
+                WebElement foundElement = elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
                 actions.moveToElement(elementDisplayed(foundElement)).perform();
             } else {
                 actions.moveToElement(elementDisplayed((WebElement) element)).perform();
