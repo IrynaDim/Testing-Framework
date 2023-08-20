@@ -22,11 +22,11 @@ public class SoftWebElementAction {
         try {
             if (element.getClass().getName().contains("By")) {
                 WebElement foundElement = waitUtil.elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
-                WebElement ele = waitUtil.clickableCustomWait(foundElement);
+                WebElement ele = waitUtil.clickableElement(foundElement);
                 ele.click();
                 getLog().info("Clicked element : " + elementName);
             } else {
-                WebElement ele = waitUtil.clickableCustomWait(waitUtil.elementDisplayed((WebElement) element));
+                WebElement ele = waitUtil.clickableElement(waitUtil.elementDisplayed((WebElement) element));
                 ele.click();
                 getLog().info("Clicked element : " + elementName);
             }

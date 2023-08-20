@@ -17,7 +17,6 @@ public class MainPageTest extends BaseTest {
 
     @Test
     public void checkUkrainianLanguageExist() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         List<WebElement> languages = getMainPage().getLanguages();
         long size = languages.stream()
                 .filter(l -> l.getText()
@@ -28,14 +27,12 @@ public class MainPageTest extends BaseTest {
 
     @Test
     public void checkLanguageSize() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         List<WebElement> languages = getMainPage().getLanguages();
         assertEquals("Language size is " + languages.size(), languages.size(), 46);
     }
 
     @Test
     public void checkArtClothesButton_emptyListOfArts() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         List<String> clothesHoverElements = getMainPage().getArtHoverElements().stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
@@ -46,7 +43,6 @@ public class MainPageTest extends BaseTest {
 
     @Test
     public void checkUnSubscribeText() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         String unsubscribeElement = getMainPage().getUnsubscribeText();
         assertEquals("Unsubscribe element text is " + unsubscribeElement, "You may unsubscribe at any moment. " +
                 "For that purpose, please find our contact info in the legal notice.", unsubscribeElement);
@@ -54,14 +50,12 @@ public class MainPageTest extends BaseTest {
 
     @Test
     public void checkSubscribeText() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         String emailSubscribeElement = getMainPage().getEmailSubscribeText();
         assertEquals("Email subscribe element text is " + emailSubscribeElement, "Get our latest news and special sales", emailSubscribeElement);
     }
 
     @Test
     public void checkAccessoriesClothesButton_notEmptyListOfAccessories() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         List<String> clothesHoverElements = getMainPage().getAccessoriesHoverElements().stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
@@ -73,7 +67,6 @@ public class MainPageTest extends BaseTest {
 
     @Test
     public void checkHoverClothesButton_notEmptyListOfClothes() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         List<String> clothesHoverElements = getMainPage().getClothesHoverElements().stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
@@ -85,14 +78,12 @@ public class MainPageTest extends BaseTest {
 
     @Test
     public void checkSubscribeButtonText_upperCase() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         String text = getMainPage().getSubscribeButtonText();
         assertEquals("Text on subscribe button is " + text, "SUBSCRIBE", text);
     }
 
     @Test
     public void checkPopularClothes_CurrencyNameAndPriceNotNull() {
-        DriverFactory.getInstance().getDriver().navigate().refresh();
         List<Product> popularClothes = getMainPage().getPopularClothes();
         Set<Product> uniqueProducts = new HashSet<>(popularClothes);
         assertEquals(popularClothes.size(), uniqueProducts.size());

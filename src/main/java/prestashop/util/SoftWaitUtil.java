@@ -8,9 +8,12 @@ import prestashop.config.DriverFactory;
 import prestashop.config.LoggerFactory;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+// todo is this  impl correct? I mean using of try catch everywhere and return null?
+//  I want to write in logs everything
+// In future I want to do it with AspectJ. Not to duplicate code
 
 public class SoftWaitUtil {
     private final long waitDuration = 20;
@@ -29,17 +32,27 @@ public class SoftWaitUtil {
     }
 
 
-    public WebElement clickableCustomWait(WebElement element) {
+    public WebElement clickableElement(WebElement element) {
         disableImplicitWait();
-        WebElement ele = wait.until(ExpectedConditions.elementToBeClickable(element));
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(element));
+        } catch (TimeoutException e) {
+            LoggerFactory.logger.get().fail("Time out of waiting clickable of element.");
+            return null;
+        }
         enableImplicitWait();
-        return ele;
+        return element;
 
     }
 
     public Boolean invisibleElement(WebElement element) {
         disableImplicitWait();
-        Boolean ele = wait.until(ExpectedConditions.invisibilityOf(element));
+        Boolean ele = false;
+        try {
+            ele = wait.until(ExpectedConditions.invisibilityOf(element));
+        } catch (TimeoutException e) {
+            LoggerFactory.logger.get().fail("Time out of waiting invisibility of element.");
+        }
         enableImplicitWait();
         return ele;
 
@@ -47,21 +60,25 @@ public class SoftWaitUtil {
 
     public WebElement elementDisplayed(WebElement element) {
         disableImplicitWait();
-        WebElement ele = wait.until(ExpectedConditions.visibilityOf(element));
+        try {
+            wait.until(ExpectedConditions.visibilityOf(element));
+        } catch (TimeoutException e) {
+            LoggerFactory.logger.get().fail("Time out of waiting element displayed.");
+            return null;
+        }
         enableImplicitWait();
-        return ele;
+        return element;
     }
 
     public List<WebElement> elementsDisplayed(List<WebElement> elements) {
         disableImplicitWait();
-        List<WebElement> results = new ArrayList<>();
         try {
-            results = wait.until(ExpectedConditions.visibilityOfAllElements(elements));
+            wait.until(ExpectedConditions.visibilityOfAllElements(elements));
         } catch (TimeoutException e) {
             LoggerFactory.logger.get().fail("Time out of waiting visibility of list elements.");
+            return null;
         }
         enableImplicitWait();
-        return results;
+        return elements;
     }
-
 }
