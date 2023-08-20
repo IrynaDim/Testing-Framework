@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import prestashop.config.DriverFactory;
+import prestashop.util.ProductConverter;
 import prestashop.model.Product;
 
 import java.util.List;
@@ -80,7 +81,7 @@ public class MainPage extends BasePage {
 
     public String getSubscribeButtonText() {
         operation.switchToFrameLive();
-        WebElement sb = operation.elementDisplayed(subscribeButton);
+        WebElement sb = waitUtil.elementDisplayed(subscribeButton);
         String textTransform = sb.getCssValue("text-transform");
         String text = sb.getAttribute("defaultValue");
         if (textTransform.equalsIgnoreCase("uppercase")) {
@@ -93,18 +94,17 @@ public class MainPage extends BasePage {
     public List<WebElement> getLanguages() {
         operation.switchToFrameLive();
         operation.clickElement(languageButton, "language button");
-        return operation.elementsDisplayed(languages);
+        return waitUtil.elementsDisplayed(languages);
     }
 
     public List<Product> getPopularClothes() {
         operation.switchToFrameLive();
-        return operation.elementsDisplayed(popularClothes).stream().map(p -> {
+        return waitUtil.elementsDisplayed(popularClothes).stream().map(p -> {
             String name = p.findElement(By.xpath(".//h3[@class='h3 product-title']/a")).getText();
             String[] prices = p.findElement(By.xpath(".//div[@class='product-price-and-shipping']")).getText().split(" ");
-            return createProduct(prices, name);
+            return ProductConverter.createProduct(prices, name);
         }).collect(Collectors.toList());
     }
-
 
     public List<WebElement> getClothesHoverElements() {
         return checkHoverButton(0);
@@ -120,26 +120,8 @@ public class MainPage extends BasePage {
 
     private List<WebElement> checkHoverButton(int index) {
         operation.switchToFrameLive();
-        operation.elementsDisplayed(hoverButtons);
-        operation.moveToElement(hoverButtons.get(index));
+        //    waitUtil.elementsDisplayed(hoverButtons);
+        operation.moveToElement(hoverButtons.get(index), "hover button with index " + index);
         return dropDownMenu;
-    }
-
-    //лучше вынести в отдельный класс, можно оформить в виде билдера
-    private Product createProduct(String[] prices, String name) {
-        String currentPriceValue = prices[0];
-        String currentCurrency = currentPriceValue.substring(0, 1);
-        Double currentPrice = Double.parseDouble(currentPriceValue.substring(1));
-
-        Product product = new Product(name, currentPrice, currentCurrency);
-
-        if (prices.length > 1) {
-            String oldPriceValue = prices[1];
-            String oldCurrency = oldPriceValue.substring(0, 1);
-            Double oldPrice = Double.parseDouble(oldPriceValue.substring(1));
-            product.setOldPrice(oldPrice);
-            product.setOldCurrency(oldCurrency);
-        }
-        return product;
     }
 }

@@ -1,37 +1,35 @@
 package prestashop.util;
 
-
-
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import prestashop.config.DriverFactory;
+import prestashop.config.LoggerFactory;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class WaitUtil {
-    private final long waitDuration = 50;
+public class SoftWaitUtil {
+    private final long waitDuration = 20;
     protected WebDriverWait wait;
-    protected Actions actions;
 
-    public WaitUtil() {
+    public SoftWaitUtil() {
         wait = new WebDriverWait(DriverFactory.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
-        actions = new Actions(DriverFactory.getInstance().getDriver());
     }
 
-    private void disableImplicitWait() {
+    public void disableImplicitWait() {
         DriverFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
     }
 
-    private void enableImplicitWait() {
+    public void enableImplicitWait() {
         DriverFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(waitDuration, TimeUnit.SECONDS);
     }
 
 
-    protected WebElement clickableCustomWait(WebElement element) {
+    public WebElement clickableCustomWait(WebElement element) {
         disableImplicitWait();
         WebElement ele = wait.until(ExpectedConditions.elementToBeClickable(element));
         enableImplicitWait();
@@ -56,7 +54,12 @@ public class WaitUtil {
 
     public List<WebElement> elementsDisplayed(List<WebElement> elements) {
         disableImplicitWait();
-        List<WebElement> results = wait.until(ExpectedConditions.visibilityOfAllElements(elements));
+        List<WebElement> results = new ArrayList<>();
+        try {
+            results = wait.until(ExpectedConditions.visibilityOfAllElements(elements));
+        } catch (TimeoutException e) {
+            LoggerFactory.logger.get().fail("Time out of waiting visibility of list elements.");
+        }
         enableImplicitWait();
         return results;
     }

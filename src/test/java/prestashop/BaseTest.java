@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
@@ -13,22 +14,27 @@ import org.testng.annotations.BeforeSuite;
 import prestashop.config.DriverFactory;
 import prestashop.config.LoggerFactory;
 import prestashop.config.Reporting;
+import prestashop.config.TestNgRetry;
 import prestashop.pages.MainPage;
-import prestashop.util.CreateLink;
+import prestashop.model.Link;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class BaseTest extends Reporting {
     private static final Map<Long, MainPage> pageInstances = new ConcurrentHashMap<>();
+    private final String startPage = "https://demo.prestashop.com/#/en/front";
 
     @BeforeSuite
-    public void startReporting() {
+    public void startReporting(ITestContext iTestContext) {
         intializeReport();
+        Arrays.stream(iTestContext.getAllTestMethods()).forEach(x -> x.setRetryAnalyzerClass(TestNgRetry.class));
+
     }
 
     @AfterSuite
@@ -38,7 +44,7 @@ public class BaseTest extends Reporting {
 
     @BeforeMethod
     public void beforeTest(Method result) {
-        DriverFactory.getInstance().getDriver().get("https://demo.prestashop.com/#/en/front");
+        DriverFactory.getInstance().getDriver().get(startPage);
         ExtentTest test = report.createTest(result.getName());
         LoggerFactory.logger.set(test);
         pageInstances.putIfAbsent(Thread.currentThread().getId(), new MainPage());
@@ -67,7 +73,7 @@ public class BaseTest extends Reporting {
 
         try {
             FileUtils.copyFile(sourceFile, new File(path));
-            CreateLink mark = new CreateLink(path, "Screenshot");
+            Link mark = new Link(path, "Screenshot");
             LoggerFactory.logger.get().log(Status.FAIL, mark);
 
         } catch (IOException e) {

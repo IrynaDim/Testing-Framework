@@ -71,7 +71,7 @@ public class MainPageTest extends BaseTest {
         assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "HOME ACCESSORIES");
     }
 
-    @Test // firefox
+    @Test
     public void checkHoverClothesButton_notEmptyListOfClothes() {
         DriverFactory.getInstance().getDriver().navigate().refresh();
         List<String> clothesHoverElements = getMainPage().getClothesHoverElements().stream()

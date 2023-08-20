@@ -3,7 +3,7 @@ package prestashop.pageActions;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MainService {
+public class MainPageAction {
  //   private final MainPage mainPage = new MainPage();
 //
 //    public List<String> getLanguages() {
