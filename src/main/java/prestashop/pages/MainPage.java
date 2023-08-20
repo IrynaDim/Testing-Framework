@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import prestashop.config.Factory;
+import prestashop.config.DriverFactory;
 import prestashop.model.Product;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class MainPage extends BasePage {
 
     public MainPage() {
-        PageFactory.initElements(Factory.getInstance().getDriver(), this);
+        PageFactory.initElements(DriverFactory.getInstance().getDriver(), this);
     }
 
     @FindBy(xpath = "//p[@id='block-newsletter-label']")
@@ -125,6 +125,7 @@ public class MainPage extends BasePage {
         return dropDownMenu;
     }
 
+    //лучше вынести в отдельный класс, можно оформить в виде билдера
     private Product createProduct(String[] prices, String name) {
         String currentPriceValue = prices[0];
         String currentCurrency = currentPriceValue.substring(0, 1);
