@@ -70,17 +70,17 @@ public class MainPage extends BasePage {
 
 
     public String getEmailSubscribeText() {
-        operation.switchToFrameLive();
+        operation.switchToFrame(framelive, "iframe element");
         return operation.getTextFromElement(emailSubscribeText, "email subscribe text");
     }
 
     public String getUnsubscribeText() {
-        operation.switchToFrameLive();
+        operation.switchToFrame(framelive, "iframe element");
         return operation.getTextFromElement(unsubscribeText, "unsubscribe text");
     }
 
     public String getSubscribeButtonText() {
-        operation.switchToFrameLive();
+        operation.switchToFrame(framelive, "iframe element");
         WebElement sb = waitUtil.elementDisplayed(subscribeButton);
         String textTransform = sb.getCssValue("text-transform");
         String text = sb.getAttribute("defaultValue");
@@ -92,13 +92,13 @@ public class MainPage extends BasePage {
     }
 
     public List<WebElement> getLanguages() {
-        operation.switchToFrameLive();
+        operation.switchToFrame(framelive, "iframe element");
         operation.clickElement(languageButton, "language button");
         return waitUtil.elementsDisplayed(languages);
     }
 
     public List<Product> getPopularClothes() {
-        operation.switchToFrameLive();
+        operation.switchToFrame(framelive, "iframe element");
         return waitUtil.elementsDisplayed(popularClothes).stream().map(p -> {
             String name = p.findElement(By.xpath(".//h3[@class='h3 product-title']/a")).getText();
             String[] prices = p.findElement(By.xpath(".//div[@class='product-price-and-shipping']")).getText().split(" ");
@@ -119,8 +119,7 @@ public class MainPage extends BasePage {
     }
 
     private List<WebElement> checkHoverButton(int index) {
-        operation.switchToFrameLive();
-        //    waitUtil.elementsDisplayed(hoverButtons);
+        operation.switchToFrame(framelive, "iframe element");
         operation.moveToElement(hoverButtons.get(index), "hover button with index " + index);
         return dropDownMenu;
     }

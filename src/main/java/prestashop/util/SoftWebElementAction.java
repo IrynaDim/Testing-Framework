@@ -3,6 +3,7 @@ package prestashop.util;
 import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import prestashop.config.DriverFactory;
@@ -17,11 +18,15 @@ public class SoftWebElementAction {
         return LoggerFactory.logger.get();
     }
 
+    public WebDriver getDriver() {
+        return DriverFactory.getInstance().getDriver();
+    }
+
     public <T> void clickElement(T element, String elementName) {
 
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = waitUtil.elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
+                WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element));
                 WebElement ele = waitUtil.clickableElement(foundElement);
                 ele.click();
                 getLog().info("Clicked element : " + elementName);
@@ -43,7 +48,7 @@ public class SoftWebElementAction {
 
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = waitUtil.elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
+                WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element));
                 foundElement.sendKeys(textToEnter);
                 getLog().info("Typed this text : " + textToEnter);
             } else {
@@ -62,7 +67,7 @@ public class SoftWebElementAction {
     public <T> String getTextFromElement(T element, String textToEnter) {
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = waitUtil.elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
+                WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element));
                 String text = foundElement.getText();
                 getLog().info("Fetched this text : " + text);
                 return text;
@@ -81,19 +86,23 @@ public class SoftWebElementAction {
 
     }
 
-    public void switchToFrameLive() {
+    public <T> void switchToFrame(T element, String elementName) {
 
         try {
             DriverFactory.getInstance().getDriver().switchTo().defaultContent();
             getLog().info("Switched to default frame");
-            DriverFactory.getInstance().getDriver().switchTo().frame(waitUtil.elementDisplayed(DriverFactory.getInstance().getDriver()
-                    .findElement(By.id("framelive"))));
-            getLog().info("Switched to framelive");
+
+            if (element.getClass().getName().contains("By")) {
+                getDriver().switchTo().frame(waitUtil.elementDisplayed(getDriver().findElement((By) element)));
+            } else {
+                getDriver().switchTo().frame(waitUtil.elementDisplayed((WebElement) element));
+            }
+            getLog().info("Switched to frame " + elementName);
         } catch (NoSuchElementException e) {
-            getLog().fail("This frame is not Found");
+            getLog().fail("This frame is not Found: " + elementName);
             throw new FailTest(e);
         } catch (Exception e1) {
-            getLog().fail("Unable to switched to the frame");
+            getLog().fail("Unable to switched to the frame: " + elementName);
             throw new FailTest(e1);
         }
     }
@@ -101,7 +110,7 @@ public class SoftWebElementAction {
     public <T> void moveToElement(T element, String elementName) {
         try {
             if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = waitUtil.elementDisplayed(DriverFactory.getInstance().getDriver().findElement((By) element));
+                WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element));
                 actions.moveToElement(waitUtil.elementDisplayed(foundElement)).perform();
             } else {
                 actions.moveToElement(waitUtil.elementDisplayed((WebElement) element)).perform();

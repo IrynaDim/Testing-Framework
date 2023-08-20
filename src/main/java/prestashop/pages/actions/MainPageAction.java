@@ -1,4 +1,4 @@
-package prestashop.pageActions;
+package prestashop.pages.actions;
 
 import lombok.extern.slf4j.Slf4j;
 
