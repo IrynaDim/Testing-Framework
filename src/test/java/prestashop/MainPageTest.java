@@ -15,7 +15,7 @@ public class MainPageTest extends BaseTest {
     public void checkLanguageSize() {
         getMainPageAction()
                 .goToHomePage()
-                .assertThatLanguageSizeIs(46);
+                .assertLanguageSize();
     }
 
     @Test

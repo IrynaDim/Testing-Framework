@@ -1,5 +1,6 @@
 package prestashop.util;
 
+import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,25 +26,30 @@ public class SoftWaitUtil {
         wait = new WebDriverWait(DriverFactory.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
     }
 
+    public ExtentTest getLog() {
+        return LoggerFactory.logger.get();
+    }
+
+
     public WebDriver getDriver() {
         return DriverFactory.getInstance().getDriver();
     }
 
     public void disableImplicitWait() {
-        getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
     }
 
     public void enableImplicitWait() {
-        getDriver().manage().timeouts().implicitlyWait(waitDuration, TimeUnit.SECONDS);
+        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(waitDuration));
     }
 
-
-    public WebElement clickableElement(WebElement element) {
+    public WebElement clickableElement(WebElement element, String elementName) {
         disableImplicitWait();
         try {
             wait.until(ExpectedConditions.elementToBeClickable(element));
+            getLog().info("Successful waiting of element: " + elementName);
         } catch (TimeoutException e) {
-            LoggerFactory.logger.get().fail("Time out of waiting clickable of element.");
+            getLog().fail("Time out of waiting clickable of element: " + elementName);
             throw new FailTest(e);
         }
         enableImplicitWait();
@@ -51,13 +57,14 @@ public class SoftWaitUtil {
 
     }
 
-    public Boolean invisibleElement(WebElement element) {
+    public Boolean invisibleElement(WebElement element, String elementName) {
         disableImplicitWait();
         Boolean ele;
         try {
             ele = wait.until(ExpectedConditions.invisibilityOf(element));
+            getLog().info("Successful waiting of element: " + elementName);
         } catch (TimeoutException e) {
-            LoggerFactory.logger.get().fail("Time out of waiting invisibility of element.");
+            getLog().fail("Time out of waiting invisibility of element: " + elementName);
             throw new FailTest(e);
         }
         enableImplicitWait();
@@ -65,24 +72,26 @@ public class SoftWaitUtil {
 
     }
 
-    public WebElement elementDisplayed(WebElement element) {
+    public WebElement elementDisplayed(WebElement element, String elementName) {
         disableImplicitWait();
         try {
             wait.until(ExpectedConditions.visibilityOf(element));
+            getLog().info("Successful waiting of element: " + elementName);
         } catch (TimeoutException e) {
-            LoggerFactory.logger.get().fail("Time out of waiting element displayed.");
+            getLog().fail("Time out of waiting element displayed: " + elementName);
             throw new FailTest(e);
         }
         enableImplicitWait();
         return element;
     }
 
-    public List<WebElement> elementsDisplayed(List<WebElement> elements) {
+    public List<WebElement> elementsDisplayed(List<WebElement> elements, String elementsName) {
         disableImplicitWait();
         try {
             wait.until(ExpectedConditions.visibilityOfAllElements(elements));
+            getLog().info("Successful waiting of elements: " + elementsName);
         } catch (TimeoutException e) {
-            LoggerFactory.logger.get().fail("Time out of waiting visibility of list elements.");
+            getLog().fail("Time out of waiting visibility of list elements: " + elementsName);
             throw new FailTest(e);
         }
         enableImplicitWait();

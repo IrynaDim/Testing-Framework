@@ -71,17 +71,17 @@ public class MainPage extends BasePage {
 
     public String getEmailSubscribeText() {
         operation.switchToFrame(framelive, "iframe element");
-        return operation.getTextFromElement(emailSubscribeText, "email subscribe text");
+        return operation.getTextFromElement(emailSubscribeText, "email subscribe text", "emailSubscribe");
     }
 
     public String getUnsubscribeText() {
         operation.switchToFrame(framelive, "iframe element");
-        return operation.getTextFromElement(unsubscribeText, "unsubscribe text");
+        return operation.getTextFromElement(unsubscribeText, "unsubscribe text", "unsubscribe");
     }
 
     public String getSubscribeButtonText() {
         operation.switchToFrame(framelive, "iframe element");
-        WebElement sb = waitUtil.elementDisplayed(subscribeButton);
+        WebElement sb = waitUtil.elementDisplayed(subscribeButton, "iframe element");
         String textTransform = sb.getCssValue("text-transform");
         String text = sb.getAttribute("defaultValue");
         if (textTransform.equalsIgnoreCase("uppercase")) {
@@ -94,12 +94,12 @@ public class MainPage extends BasePage {
     public List<WebElement> getLanguages() {
         operation.switchToFrame(framelive, "iframe element");
         operation.clickElement(languageButton, "language button");
-        return waitUtil.elementsDisplayed(languages);
+        return waitUtil.elementsDisplayed(languages, "languages list");
     }
 
     public List<Product> getPopularClothes() {
         operation.switchToFrame(framelive, "iframe element");
-        return waitUtil.elementsDisplayed(popularClothes).stream().map(p -> {
+        return waitUtil.elementsDisplayed(popularClothes, "popular clothes list").stream().map(p -> {
             String name = p.findElement(By.xpath(".//h3[@class='h3 product-title']/a")).getText();
             String[] prices = p.findElement(By.xpath(".//div[@class='product-price-and-shipping']")).getText().split(" ");
             return ProductConverter.createProduct(prices, name);

@@ -42,9 +42,9 @@ public class MainPageAction {
         assertEquals("No " + language + " language in the list.", size, 1L);
     }
 
-    public void assertThatLanguageSizeIs(int size) {
+    public void assertLanguageSize() {
         List<WebElement> languages = mainPage.getLanguages();
-        assertEquals("Language size is: " + languages.size(), languages.size(), size);
+        assertEquals("Language size is: " + languages.size(), languages.size(), 46);
     }
 
     public void assertThatClothesHoverArtIsEmpty() {
