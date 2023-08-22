@@ -6,13 +6,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import prestashop.config.DriverFactory;
-import prestashop.config.LoggerFactory;
+import prestashop.config.Driver;
+import prestashop.config.Reporting;
 import prestashop.exception.FailTest;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 // todo is this  impl correct? I mean using of try catch everywhere?
 //  I want to write in logs everything
@@ -23,16 +22,16 @@ public class SoftWaitUtil {
     protected WebDriverWait wait;
 
     public SoftWaitUtil() {
-        wait = new WebDriverWait(DriverFactory.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
+        wait = new WebDriverWait(Driver.getInstance().getDriver(), Duration.ofSeconds(waitDuration));
     }
 
-    public ExtentTest getLog() {
-        return LoggerFactory.logger.get();
+    public ExtentTest getReport() {
+        return Reporting.threadReport.get();
     }
 
 
     public WebDriver getDriver() {
-        return DriverFactory.getInstance().getDriver();
+        return Driver.getInstance().getDriver();
     }
 
     public void disableImplicitWait() {
@@ -47,9 +46,9 @@ public class SoftWaitUtil {
         disableImplicitWait();
         try {
             wait.until(ExpectedConditions.elementToBeClickable(element));
-            getLog().info("Successful waiting of element: " + elementName);
+            getReport().info("Successful waiting of element: " + elementName);
         } catch (TimeoutException e) {
-            getLog().fail("Time out of waiting clickable of element: " + elementName);
+            getReport().fail("Time out of waiting clickable of element: " + elementName);
             throw new FailTest(e);
         }
         enableImplicitWait();
@@ -62,9 +61,9 @@ public class SoftWaitUtil {
         Boolean ele;
         try {
             ele = wait.until(ExpectedConditions.invisibilityOf(element));
-            getLog().info("Successful waiting of element: " + elementName);
+            getReport().info("Successful waiting of element: " + elementName);
         } catch (TimeoutException e) {
-            getLog().fail("Time out of waiting invisibility of element: " + elementName);
+            getReport().fail("Time out of waiting invisibility of element: " + elementName);
             throw new FailTest(e);
         }
         enableImplicitWait();
@@ -76,9 +75,9 @@ public class SoftWaitUtil {
         disableImplicitWait();
         try {
             wait.until(ExpectedConditions.visibilityOf(element));
-            getLog().info("Successful waiting of element: " + elementName);
+            getReport().info("Successful waiting of element: " + elementName);
         } catch (TimeoutException e) {
-            getLog().fail("Time out of waiting element displayed: " + elementName);
+            getReport().fail("Time out of waiting element displayed: " + elementName);
             throw new FailTest(e);
         }
         enableImplicitWait();
@@ -89,9 +88,9 @@ public class SoftWaitUtil {
         disableImplicitWait();
         try {
             wait.until(ExpectedConditions.visibilityOfAllElements(elements));
-            getLog().info("Successful waiting of elements: " + elementsName);
+            getReport().info("Successful waiting of elements: " + elementsName);
         } catch (TimeoutException e) {
-            getLog().fail("Time out of waiting visibility of list elements: " + elementsName);
+            getReport().fail("Time out of waiting visibility of list elements: " + elementsName);
             throw new FailTest(e);
         }
         enableImplicitWait();

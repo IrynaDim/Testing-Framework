@@ -11,8 +11,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-import prestashop.config.DriverFactory;
-import prestashop.config.LoggerFactory;
+import prestashop.config.Driver;
 import prestashop.config.Reporting;
 import prestashop.config.TestNgRetry;
 import prestashop.model.Link;
@@ -43,22 +42,21 @@ public class BaseTest extends Reporting {
 
     @BeforeMethod
     public void beforeTest(Method result) {
-        DriverFactory.getInstance().getDriver().get(startPage);
+        Driver.getInstance().getDriver().get(startPage);
         ExtentTest test = report.createTest(result.getName());
-        LoggerFactory.logger.set(test);
+        Reporting.threadReport.set(test);
         pageInstances.putIfAbsent(Thread.currentThread().getId(), new MainPageAction());
     }
 
     @AfterMethod
     public void afterTest(Method result) {
-        String status = LoggerFactory.logger.get().getStatus().toString();
-        System.out.println(status);
+        String status = Reporting.threadReport.get().getStatus().toString();
         if (status.equals("fail")) {
             captureScreenshot();
         }
 
-        DriverFactory.getInstance().removeDriver();
-        LoggerFactory.logger.remove();
+        Driver.getInstance().removeDriver();
+        Reporting.threadReport.remove();
         pageInstances.remove(Thread.currentThread().getId());
     }
 
@@ -68,15 +66,15 @@ public class BaseTest extends Reporting {
 
     private synchronized void captureScreenshot() {
         String path = System.getProperty("user.dir") + "/result/screeshot" + Math.random() + ".jpg";
-        File sourceFile = ((TakesScreenshot) DriverFactory.getInstance().getDriver()).getScreenshotAs(OutputType.FILE);
+        File sourceFile = ((TakesScreenshot) Driver.getInstance().getDriver()).getScreenshotAs(OutputType.FILE);
 
         try {
             FileUtils.copyFile(sourceFile, new File(path));
             Link mark = new Link(path, "Screenshot");
-            LoggerFactory.logger.get().log(Status.FAIL, mark);
+            Reporting.threadReport.get().log(Status.FAIL, mark);
 
         } catch (IOException e) {
-            LoggerFactory.logger.get().fail("Unable to take screenshot");
+            Reporting.threadReport.get().fail("Unable to take screenshot");
         }
     }
 }

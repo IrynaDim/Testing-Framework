@@ -2,8 +2,8 @@ package prestashop.pages.mainPage;
 
 import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.WebElement;
-import prestashop.config.DriverFactory;
-import prestashop.config.LoggerFactory;
+import prestashop.config.Driver;
+import prestashop.config.Reporting;
 import prestashop.model.Product;
 
 import java.util.HashSet;
@@ -19,11 +19,11 @@ public class MainPageAction {
     private final String startPage = "https://demo.prestashop.com/#/en/front";
 
     public ExtentTest getLog() {
-        return LoggerFactory.logger.get();
+        return Reporting.threadReport.get();
     }
 
     public MainPageAction goToHomePage() {
-        DriverFactory.getInstance().getDriver().get(startPage);
+        Driver.getInstance().getDriver().get(startPage);
         getLog().info("Switch to home page");
         return this;
     }

@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import prestashop.config.DriverFactory;
+import prestashop.config.Driver;
 import prestashop.pages.BasePage;
 import prestashop.util.ProductConverter;
 import prestashop.model.Product;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class MainPage extends BasePage {
 
     public MainPage() {
-        PageFactory.initElements(DriverFactory.getInstance().getDriver(), this);
+        PageFactory.initElements(Driver.getInstance().getDriver(), this);
     }
 
     @FindBy(xpath = "//p[@id='block-newsletter-label']")
