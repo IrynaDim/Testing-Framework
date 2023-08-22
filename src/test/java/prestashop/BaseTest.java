@@ -15,8 +15,8 @@ import prestashop.config.DriverFactory;
 import prestashop.config.LoggerFactory;
 import prestashop.config.Reporting;
 import prestashop.config.TestNgRetry;
-import prestashop.pages.MainPage;
 import prestashop.model.Link;
+import prestashop.pages.actions.MainPageAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,14 +27,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class BaseTest extends Reporting {
-    private static final Map<Long, MainPage> pageInstances = new ConcurrentHashMap<>();
+    private static final Map<Long, MainPageAction> pageInstances = new ConcurrentHashMap<>();
     private final String startPage = "https://demo.prestashop.com/#/en/front";
 
     @BeforeSuite
-    public void startReporting(ITestContext iTestContext) {
+    public void start(ITestContext iTestContext) {
         intializeReport();
         Arrays.stream(iTestContext.getAllTestMethods()).forEach(x -> x.setRetryAnalyzerClass(TestNgRetry.class));
-
     }
 
     @AfterSuite
@@ -47,7 +46,7 @@ public class BaseTest extends Reporting {
         DriverFactory.getInstance().getDriver().get(startPage);
         ExtentTest test = report.createTest(result.getName());
         LoggerFactory.logger.set(test);
-        pageInstances.putIfAbsent(Thread.currentThread().getId(), new MainPage());
+        pageInstances.putIfAbsent(Thread.currentThread().getId(), new MainPageAction());
     }
 
     @AfterMethod
@@ -63,7 +62,7 @@ public class BaseTest extends Reporting {
         pageInstances.remove(Thread.currentThread().getId());
     }
 
-    public MainPage getMainPage(){
+    public MainPageAction getMainPageAction(){
         return pageInstances.get(Thread.currentThread().getId());
     }
 

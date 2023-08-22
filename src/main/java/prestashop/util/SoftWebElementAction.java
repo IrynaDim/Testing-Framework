@@ -1,6 +1,7 @@
 package prestashop.util;
 
 import com.aventstack.extentreports.ExtentTest;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
