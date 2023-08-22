@@ -16,7 +16,7 @@ import prestashop.config.LoggerFactory;
 import prestashop.config.Reporting;
 import prestashop.config.TestNgRetry;
 import prestashop.model.Link;
-import prestashop.pages.actions.MainPageAction;
+import prestashop.pages.mainPage.MainPageAction;
 
 import java.io.File;
 import java.io.IOException;

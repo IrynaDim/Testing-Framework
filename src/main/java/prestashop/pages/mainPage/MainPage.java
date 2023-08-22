@@ -1,10 +1,11 @@
-package prestashop.pages;
+package prestashop.pages.mainPage;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import prestashop.config.DriverFactory;
+import prestashop.pages.BasePage;
 import prestashop.util.ProductConverter;
 import prestashop.model.Product;
 
@@ -69,17 +70,17 @@ public class MainPage extends BasePage {
     private WebElement productsInShoppingCart;
 
 
-    public String getEmailSubscribeText() {
+    protected String getEmailSubscribeText() {
         operation.switchToFrame(framelive, "iframe element");
         return operation.getTextFromElement(emailSubscribeText, "email subscribe text", "emailSubscribe");
     }
 
-    public String getUnsubscribeText() {
+    protected String getUnsubscribeText() {
         operation.switchToFrame(framelive, "iframe element");
         return operation.getTextFromElement(unsubscribeText, "unsubscribe text", "unsubscribe");
     }
 
-    public String getSubscribeButtonText() {
+    protected String getSubscribeButtonText() {
         operation.switchToFrame(framelive, "iframe element");
         WebElement sb = waitUtil.elementDisplayed(subscribeButton, "iframe element");
         String textTransform = sb.getCssValue("text-transform");
@@ -91,13 +92,13 @@ public class MainPage extends BasePage {
         }
     }
 
-    public List<WebElement> getLanguages() {
+    protected List<WebElement> getLanguages() {
         operation.switchToFrame(framelive, "iframe element");
         operation.clickElement(languageButton, "language button");
         return waitUtil.elementsDisplayed(languages, "languages list");
     }
 
-    public List<Product> getPopularClothes() {
+    protected List<Product> getPopularClothes() {
         operation.switchToFrame(framelive, "iframe element");
         return waitUtil.elementsDisplayed(popularClothes, "popular clothes list").stream().map(p -> {
             String name = p.findElement(By.xpath(".//h3[@class='h3 product-title']/a")).getText();
@@ -106,19 +107,19 @@ public class MainPage extends BasePage {
         }).collect(Collectors.toList());
     }
 
-    public List<WebElement> getClothesHoverElements() {
+    protected List<WebElement> getClothesHoverElements() {
         return checkHoverButton(0);
     }
 
-    public List<WebElement> getAccessoriesHoverElements() {
+    protected List<WebElement> getAccessoriesHoverElements() {
         return checkHoverButton(1);
     }
 
-    public List<WebElement> getArtHoverElements() {
+    protected List<WebElement> getArtHoverElements() {
         return checkHoverButton(2);
     }
 
-    private List<WebElement> checkHoverButton(int index) {
+    protected List<WebElement> checkHoverButton(int index) {
         operation.switchToFrame(framelive, "iframe element");
         operation.moveToElement(hoverButtons.get(index), "hover button with index " + index);
         return dropDownMenu;

@@ -1,11 +1,10 @@
-package prestashop.pages.actions;
+package prestashop.pages.mainPage;
 
 import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.WebElement;
 import prestashop.config.DriverFactory;
 import prestashop.config.LoggerFactory;
 import prestashop.model.Product;
-import prestashop.pages.MainPage;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +27,6 @@ public class MainPageAction {
         getLog().info("Switch to home page");
         return this;
     }
-
 
     /**
      * Asserts

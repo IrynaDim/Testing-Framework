@@ -8,7 +8,7 @@ public abstract class BasePage {
     protected SoftWebElementAction operation;
     protected SoftWaitUtil waitUtil;
 
-    BasePage() {
+    protected BasePage() {
         operation = new SoftWebElementAction();
         waitUtil = new SoftWaitUtil();
     }
