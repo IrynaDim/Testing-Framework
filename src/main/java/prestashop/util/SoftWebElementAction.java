@@ -32,16 +32,9 @@ public class SoftWebElementAction {
     public <T> void clickElement(T element, String elementName) {
 
         try {
-            if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
-                WebElement ele = waitUtil.clickableElement(foundElement, elementName);
-                ele.click();
-                getReport().info("Clicked element : " + elementName);
-            } else {
-                WebElement ele = waitUtil.clickableElement(waitUtil.elementDisplayed((WebElement) element, elementName), elementName);
-                ele.click();
-                getReport().info("Clicked element : " + elementName);
-            }
+            WebElement ele = waitUtil.clickableElement(waitUtil.elementDisplayed(element, elementName), elementName);
+            ele.click();
+            getReport().info("Clicked element : " + elementName);
         } catch (NoSuchElementException e) {
             getReport().fail("Element is not found :" + elementName);
             throw new FailTest(e);
@@ -53,22 +46,13 @@ public class SoftWebElementAction {
 
     public <T, K> void insertTextToElement(T element, K textToEnter, String elementName) {
         try {
-            if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
-                if (textToEnter.getClass().getName().contains("String")) {
-                    foundElement.sendKeys((String) textToEnter);
-                } else {
-                    foundElement.sendKeys((Keys) textToEnter);
-                }
-                getReport().info("Typed this text : " + textToEnter + ", to the element " + elementName);
+            WebElement foundElement = waitUtil.elementDisplayed(element, elementName);
+            if (textToEnter.getClass().getName().contains("String")) {
+                foundElement.sendKeys((String) textToEnter);
             } else {
-                if (textToEnter.getClass().getName().contains("String")) {
-                    waitUtil.elementDisplayed((WebElement) element, elementName).sendKeys((String) textToEnter);
-                } else {
-                    waitUtil.elementDisplayed((WebElement) element, elementName).sendKeys((Keys) textToEnter);
-                }
-                getReport().info("Typed this text : " + textToEnter + ", to the element " + elementName);
+                foundElement.sendKeys((Keys) textToEnter);
             }
+            getReport().info("Typed this text : " + textToEnter + ", to the element " + elementName);
         } catch (NoSuchElementException e) {
             getReport().fail("Element is not found: " + elementName);
             throw new FailTest(e);
@@ -80,16 +64,9 @@ public class SoftWebElementAction {
 
     public <T> String getTextFromElement(T element, String elementName) {
         try {
-            if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
-                String text = foundElement.getText();
-                getReport().info("Fetched this text : \"" + text + "\" from the element: " + elementName);
-                return text;
-            } else {
-                String text = waitUtil.elementDisplayed((WebElement) element, elementName).getText();
-                getReport().info("Fetched this text : \"" + text + "\" from the element: " + elementName);
-                return text;
-            }
+            String text = waitUtil.elementDisplayed(element, elementName).getText();
+            getReport().info("Fetched this text : \"" + text + "\" from the element: " + elementName);
+            return text;
         } catch (NoSuchElementException e) {
             getReport().fail("Text in element: " + elementName + " is not found.");
             throw new FailTest(e);
@@ -105,12 +82,7 @@ public class SoftWebElementAction {
         try {
             getDriver().switchTo().defaultContent();
             getReport().info("Switched to default frame");
-
-            if (element.getClass().getName().contains("By")) {
-                getDriver().switchTo().frame(waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName));
-            } else {
-                getDriver().switchTo().frame(waitUtil.elementDisplayed((WebElement) element, elementName));
-            }
+            getDriver().switchTo().frame(waitUtil.elementDisplayed(element, elementName));
             getReport().info("Switched to frame " + elementName);
         } catch (NoSuchElementException e) {
             getReport().fail("This frame is not Found: " + elementName);
@@ -123,12 +95,7 @@ public class SoftWebElementAction {
 
     public <T> void moveToElement(T element, String elementName) {
         try {
-            if (element.getClass().getName().contains("By")) {
-                WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
-                actions.moveToElement(foundElement).perform();
-            } else {
-                actions.moveToElement(waitUtil.elementDisplayed((WebElement) element, elementName)).perform();
-            }
+            actions.moveToElement(waitUtil.elementDisplayed(element, elementName)).perform();
             getReport().info("Moved to element: " + elementName);
 
         } catch (NoSuchElementException e) {
@@ -144,11 +111,7 @@ public class SoftWebElementAction {
         JavascriptExecutor executor = (JavascriptExecutor) getDriver();
         WebElement foundElement;
         try {
-            if (element.getClass().getName().contains("By")) {
-                foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
-            } else {
-                foundElement = waitUtil.elementDisplayed((WebElement) element, elementName);
-            }
+            foundElement = waitUtil.elementDisplayed(element, elementName);
             getReport().info("Found element: " + elementName);
         } catch (NoSuchElementException e) {
             getReport().fail("No such element: " + elementName);
