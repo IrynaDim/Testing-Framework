@@ -15,7 +15,7 @@ public class MainPageTest extends BaseTest {
     public void checkLanguageSize() {
         getMainPageAction()
                 .goToHomePage()
-                .assertLanguageSize();
+                .assertLanguageSize(46);
     }
 
     @Test
@@ -29,14 +29,15 @@ public class MainPageTest extends BaseTest {
     public void checkUnSubscribeText() {
         getMainPageAction()
                 .goToHomePage()
-                .assertUnsubscribeText();
+                .assertUnsubscribeText("You may unsubscribe at any moment. " +
+                        "For that purpose, please find our contact info in the legal notice.");
     }
 
     @Test
     public void checkSubscribeText() {
         getMainPageAction()
                 .goToHomePage()
-                .assertEmailSubscribeText();
+                .assertEmailSubscribeText("Get our latest news and special sales");
     }
 
     @Test
@@ -57,13 +58,13 @@ public class MainPageTest extends BaseTest {
     public void checkSubscribeButtonText_upperCase() {
         getMainPageAction()
                 .goToHomePage()
-                .assertSubscribeButtonText();
+                .assertSubscribeButtonText("SUBSCRIBE");
     }
 
     @Test
     public void checkPopularClothes_CurrencyNameAndPriceNotNull() {
         getMainPageAction()
                 .goToHomePage()
-                .assertPopularClothes();
+                .assertPopularClothes(8);
     }
 }

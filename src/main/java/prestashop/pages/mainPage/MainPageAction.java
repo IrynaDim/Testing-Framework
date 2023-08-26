@@ -1,16 +1,15 @@
 package prestashop.pages.mainPage;
 
 import com.aventstack.extentreports.ExtentTest;
-import org.openqa.selenium.WebElement;
 import prestashop.config.Driver;
 import prestashop.config.Reporting;
 import prestashop.model.Product;
+import prestashop.pages.searchProduct.SearchAllProductPageAction;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 import static org.testng.AssertJUnit.*;
 
@@ -22,70 +21,123 @@ public class MainPageAction {
         return Reporting.threadReport.get();
     }
 
+    /**
+     * Action on page
+     **/
+    public SearchAllProductPageAction enterTextInSearchFieldAndPressEnter(String text) {
+        mainPage.enterTextInSearchFieldAndPressEnter(text);
+        return new SearchAllProductPageAction();
+    }
+
     public MainPageAction goToHomePage() {
         Driver.getInstance().getDriver().get(startPage);
         getLog().info("Switch to home page");
         return this;
     }
 
+    public MainPageAction clearShoppingCart() {
+        if (!mainPage.getAmountOfProductsInShoppingCart().equals("(0)")) {
+            mainPage.clickCartButton()
+                    .clearShoppingCart()
+                    .refreshPage();
+        }
+        return this;
+    }
+
+    public List<String> getLanguages() {
+        return mainPage.getLanguages();
+    }
+
+    public List<String> getArtHoverElements() {
+        List<String> artHoverElements = mainPage.getArtHoverElements();
+        artHoverElements.removeIf(String::isEmpty);
+        return artHoverElements;
+    }
+
+    public List<String> getAccessoriesHoverElements() {
+        List<String> accessoriesHoverElements = mainPage.getAccessoriesHoverElements();
+        accessoriesHoverElements.removeIf(String::isEmpty);
+        return accessoriesHoverElements;
+    }
+
+    public List<String> getClothesHoverElements() {
+        List<String> clothesHoverElements = mainPage.getClothesHoverElements();
+        clothesHoverElements.removeIf(String::isEmpty);
+        return clothesHoverElements;
+    }
+
+    public String getUnsubscribeText() {
+        return mainPage.getUnsubscribeText();
+    }
+
+    public String getEmailSubscribeText() {
+        return mainPage.getEmailSubscribeText();
+    }
+
+    public String getSubscribeButtonText() {
+        return mainPage.getSubscribeButtonText();
+    }
+
+    public List<Product> getPopularProducts() {
+        return mainPage.getPopularClothes();
+    }
+
     /**
      * Asserts
      **/
     public void assertThatLanguageIsPresent(String language) {
-        List<WebElement> languages = mainPage.getLanguages();
-        long size = languages.stream()
-                .filter(l -> l.getText()
+        long size = getLanguages().stream()
+                .filter(l -> l
                         .equals("Українська"))
                 .count();
         assertEquals("No " + language + " language in the list.", size, 1L);
     }
 
-    public void assertLanguageSize() {
-        List<WebElement> languages = mainPage.getLanguages();
+    public void assertLanguageSize(int size) {
+        List<String> languages = getLanguages();
         assertEquals("Language size is: " + languages.size(), languages.size(), 46);
     }
 
     public void assertThatClothesHoverArtIsEmpty() {
-        List<String> clothesHoverElements = convertWebElementsToStrings(mainPage.getArtHoverElements());
+        List<String> clothesHoverElements = getArtHoverElements();
         assertEquals("ClothesHoverElements contains " + createStringFromList(clothesHoverElements),
                 clothesHoverElements.size(), 0);
     }
 
     public void assertThatClothesHoverAccessoriesIsNotEmpty() {
-        List<String> clothesHoverElements = convertWebElementsToStrings(mainPage.getAccessoriesHoverElements());
+        List<String> clothesHoverElements = getAccessoriesHoverElements();
         assertEquals("Clothes hover element list contains " + createStringFromList(clothesHoverElements), clothesHoverElements.size(), 2);
         assertEquals("First element is " + clothesHoverElements.get(0), clothesHoverElements.get(0), "STATIONERY");
         assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "HOME ACCESSORIES");
     }
 
     public void assertThatClothesHoverIsNotEmpty() {
-        List<String> clothesHoverElements = convertWebElementsToStrings(mainPage.getClothesHoverElements());
+        List<String> clothesHoverElements = getClothesHoverElements();
         assertEquals("Clothes hover element list contains: " + createStringFromList(clothesHoverElements), clothesHoverElements.size(), 2);
         assertEquals("First element is " + clothesHoverElements.get(0), clothesHoverElements.get(0), "MEN");
         assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "WOMEN");
     }
 
-    public void assertUnsubscribeText() {
-        String unsubscribeElement = mainPage.getUnsubscribeText();
-        assertEquals("Unsubscribe element text is " + unsubscribeElement, "You may unsubscribe at any moment. " +
-                "For that purpose, please find our contact info in the legal notice.", unsubscribeElement);
+    public void assertUnsubscribeText(String text) {
+        String unsubscribeElement = getUnsubscribeText();
+        assertEquals("Unsubscribe element text is " + unsubscribeElement, text, unsubscribeElement);
     }
 
-    public void assertEmailSubscribeText() {
-        String emailSubscribeElement = mainPage.getEmailSubscribeText();
-        assertEquals("Email subscribe element text is " + emailSubscribeElement, "Get our latest news and special sales", emailSubscribeElement);
+    public void assertEmailSubscribeText(String text) {
+        String emailSubscribeElement = getEmailSubscribeText();
+        assertEquals("Email subscribe element text is " + emailSubscribeElement, text, emailSubscribeElement);
     }
 
-    public void assertSubscribeButtonText() {
-        String text = mainPage.getSubscribeButtonText();
-        assertEquals("Text on subscribe button is " + text, "SUBSCRIBE", text);
+    public void assertSubscribeButtonText(String text) {
+        String textFromButton = getSubscribeButtonText();
+        assertEquals("Text on subscribe button is " + textFromButton, text, textFromButton);
     }
 
-    public void assertPopularClothes() {
-        List<Product> popularClothes = mainPage.getPopularClothes();
+    public void assertPopularClothes(int size) {
+        List<Product> popularClothes = getPopularProducts();
         Set<Product> uniqueProducts = new HashSet<>(popularClothes);
         assertEquals(popularClothes.size(), uniqueProducts.size());
-        assertEquals(popularClothes.size(), 8);
+        assertEquals(popularClothes.size(), size);
         popularClothes.forEach(p -> {
             assertNotNull("Currency is null", p.getCurrency());
             assertNotNull("Product name is null", p.getName());
@@ -103,12 +155,5 @@ public class MainPageAction {
             joiner.add(element);
         }
         return joiner.toString();
-    }
-
-    private List<String> convertWebElementsToStrings(List<WebElement> webElements) {
-        List<String> result = webElements.stream().map(WebElement::getText)
-                .collect(Collectors.toList());
-        result.removeIf(String::isEmpty);
-        return result;
     }
 }

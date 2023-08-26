@@ -1,11 +1,15 @@
 package prestashop.pages.mainPage;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import prestashop.config.Driver;
 import prestashop.pages.BasePage;
+import prestashop.pages.searchProduct.SearchAllProductPage;
+import prestashop.pages.shoppingCart.ShoppingCartPage;
 import prestashop.util.ProductConverter;
 import prestashop.model.Product;
 
@@ -24,7 +28,7 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//input[@name='s']")
     private WebElement searchButton;
 
-    @FindBy(xpath = "//div[@class='col-xs-12']/p") //
+    @FindBy(xpath = "//div[@class='col-xs-12']/p")
     private WebElement unsubscribeText;
 
     @FindBy(xpath = "//input[@class='btn btn-primary float-xs-right hidden-xs-down']")
@@ -69,15 +73,25 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//span[@class='cart-products-count']")
     private WebElement productsInShoppingCart;
 
+    public ShoppingCartPage clickCartButton() {
+        operation.switchToFrame(framelive, "iframe element");
+        operation.clickElement(cartButton, "cart button");
+        return new ShoppingCartPage();
+    }
+
+    protected String getAmountOfProductsInShoppingCart() {
+        operation.switchToFrame(framelive, "iframe element");
+        return operation.getTextFromElement(productsInShoppingCart, "amount of products in cart");
+    }
 
     protected String getEmailSubscribeText() {
         operation.switchToFrame(framelive, "iframe element");
-        return operation.getTextFromElement(emailSubscribeText, "email subscribe text", "emailSubscribe");
+        return operation.getTextFromElement(emailSubscribeText, "emailSubscribe");
     }
 
     protected String getUnsubscribeText() {
         operation.switchToFrame(framelive, "iframe element");
-        return operation.getTextFromElement(unsubscribeText, "unsubscribe text", "unsubscribe");
+        return operation.getTextFromElement(unsubscribeText, "unsubscribe");
     }
 
     protected String getSubscribeButtonText() {
@@ -92,10 +106,12 @@ public class MainPage extends BasePage {
         }
     }
 
-    protected List<WebElement> getLanguages() {
+    protected List<String> getLanguages() {
         operation.switchToFrame(framelive, "iframe element");
         operation.clickElement(languageButton, "language button");
-        return waitUtil.elementsDisplayed(languages, "languages list");
+        return waitUtil.elementsDisplayed(languages, "languages list").stream()
+                .map(WebElement::getText)
+                .collect(Collectors.toList());
     }
 
     protected List<Product> getPopularClothes() {
@@ -107,21 +123,30 @@ public class MainPage extends BasePage {
         }).collect(Collectors.toList());
     }
 
-    protected List<WebElement> getClothesHoverElements() {
+    protected List<String> getClothesHoverElements() {
         return checkHoverButton(0);
     }
 
-    protected List<WebElement> getAccessoriesHoverElements() {
+    protected List<String> getAccessoriesHoverElements() {
         return checkHoverButton(1);
     }
 
-    protected List<WebElement> getArtHoverElements() {
+    protected List<String> getArtHoverElements() {
         return checkHoverButton(2);
     }
 
-    protected List<WebElement> checkHoverButton(int index) {
+    protected List<String> checkHoverButton(int index) {
         operation.switchToFrame(framelive, "iframe element");
         operation.moveToElement(hoverButtons.get(index), "hover button with index " + index);
-        return dropDownMenu;
+        return dropDownMenu.stream()
+                .map(WebElement::getText)
+                .collect(Collectors.toList());
+    }
+
+    protected SearchAllProductPage enterTextInSearchFieldAndPressEnter(String text) {
+        operation.switchToFrame(framelive, "iframe element");
+        operation.insertTextToElement(searchButton, text, "search button");
+        searchButton.sendKeys(Keys.ENTER);
+        return new SearchAllProductPage();
     }
 }

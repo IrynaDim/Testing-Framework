@@ -1,10 +1,7 @@
 package prestashop.util;
 
 import com.aventstack.extentreports.ExtentTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import prestashop.config.Driver;
 import prestashop.config.Reporting;
@@ -14,12 +11,22 @@ public class SoftWebElementAction {
     private final SoftWaitUtil waitUtil = new SoftWaitUtil();
     private final Actions actions = new Actions(Driver.getInstance().getDriver());
 
-    public ExtentTest getReport() {
+    private ExtentTest getReport() {
         return Reporting.threadReport.get();
     }
 
-    public WebDriver getDriver() {
+    private WebDriver getDriver() {
         return Driver.getInstance().getDriver();
+    }
+
+    public <T> T refreshPage(T page, String pageName) {
+        try {
+            getDriver().navigate().refresh();
+        } catch (Exception e) {
+            getReport().error("Error while refreshing page: " + pageName);
+            throw new FailTest(e);
+        }
+        return page;
     }
 
     public <T> void clickElement(T element, String elementName) {
@@ -44,15 +51,22 @@ public class SoftWebElementAction {
         }
     }
 
-    public <T> void insertTextToElement(T element, String textToEnter, String elementName) {
-
+    public <T, K> void insertTextToElement(T element, K textToEnter, String elementName) {
         try {
             if (element.getClass().getName().contains("By")) {
                 WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
-                foundElement.sendKeys(textToEnter);
+                if (textToEnter.getClass().getName().contains("String")) {
+                    foundElement.sendKeys((String) textToEnter);
+                } else {
+                    foundElement.sendKeys((Keys) textToEnter);
+                }
                 getReport().info("Typed this text : " + textToEnter + ", to the element " + elementName);
             } else {
-                waitUtil.elementDisplayed((WebElement) element, elementName).sendKeys(textToEnter);
+                if (textToEnter.getClass().getName().contains("String")) {
+                    waitUtil.elementDisplayed((WebElement) element, elementName).sendKeys((String) textToEnter);
+                } else {
+                    waitUtil.elementDisplayed((WebElement) element, elementName).sendKeys((Keys) textToEnter);
+                }
                 getReport().info("Typed this text : " + textToEnter + ", to the element " + elementName);
             }
         } catch (NoSuchElementException e) {
@@ -64,7 +78,7 @@ public class SoftWebElementAction {
         }
     }
 
-    public <T> String getTextFromElement(T element, String textToEnter, String elementName) {
+    public <T> String getTextFromElement(T element, String elementName) {
         try {
             if (element.getClass().getName().contains("By")) {
                 WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
@@ -72,15 +86,15 @@ public class SoftWebElementAction {
                 getReport().info("Fetched this text : \"" + text + "\" from the element: " + elementName);
                 return text;
             } else {
-                String text = waitUtil.elementDisplayed((WebElement) element, textToEnter).getText();
+                String text = waitUtil.elementDisplayed((WebElement) element, elementName).getText();
                 getReport().info("Fetched this text : \"" + text + "\" from the element: " + elementName);
                 return text;
             }
         } catch (NoSuchElementException e) {
-            getReport().fail("Element: " + elementName + ", with the next text is not found: " + textToEnter);
+            getReport().fail("Text in element: " + elementName + " is not found.");
             throw new FailTest(e);
         } catch (Exception e1) {
-            getReport().fail("Unable to fetch text: \"" + textToEnter + "\" from the element: " + elementName);
+            getReport().fail("Unable to fetch text from the element: " + elementName);
             throw new FailTest(e1);
         }
 
@@ -89,7 +103,7 @@ public class SoftWebElementAction {
     public <T> void switchToFrame(T element, String elementName) {
 
         try {
-            Driver.getInstance().getDriver().switchTo().defaultContent();
+            getDriver().switchTo().defaultContent();
             getReport().info("Switched to default frame");
 
             if (element.getClass().getName().contains("By")) {
@@ -111,7 +125,7 @@ public class SoftWebElementAction {
         try {
             if (element.getClass().getName().contains("By")) {
                 WebElement foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
-                actions.moveToElement(waitUtil.elementDisplayed(foundElement, elementName)).perform();
+                actions.moveToElement(foundElement).perform();
             } else {
                 actions.moveToElement(waitUtil.elementDisplayed((WebElement) element, elementName)).perform();
             }
@@ -124,5 +138,31 @@ public class SoftWebElementAction {
             getReport().fail("Unable to move to the element: " + elementName);
             throw new FailTest(e1);
         }
+    }
+
+    public <T> void javaScriptInsertText(T element, String javaScript, String textToInsert, String elementName) {
+        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+        WebElement foundElement;
+        try {
+            if (element.getClass().getName().contains("By")) {
+                foundElement = waitUtil.elementDisplayed(getDriver().findElement((By) element), elementName);
+            } else {
+                foundElement = waitUtil.elementDisplayed((WebElement) element, elementName);
+            }
+            getReport().info("Found element: " + elementName);
+        } catch (NoSuchElementException e) {
+            getReport().fail("No such element: " + elementName);
+            throw new FailTest(e);
+        } catch (Exception e1) {
+            getReport().fail("Unable to move to the element: " + elementName);
+            throw new FailTest(e1);
+        }
+        try {
+            executor.executeScript(javaScript, foundElement, textToInsert);
+        } catch (Exception e) {
+            getReport().fail("Unable to insert text in element \"" + elementName + "\" using javaScript " + javaScript);
+            throw new FailTest(e);
+        }
+        getReport().info("Insert text using javascript to element: " + elementName);
     }
 }

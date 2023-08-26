@@ -1,4 +1,4 @@
-package prestashop.model;
+package prestashop.model.enums;
 
 public enum Browser {
     CHROME,

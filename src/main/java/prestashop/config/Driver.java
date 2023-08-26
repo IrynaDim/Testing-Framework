@@ -5,7 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import prestashop.model.Browser;
+import prestashop.model.enums.Browser;
 import prestashop.util.PropertyReader;
 
 import java.io.File;
