@@ -57,7 +57,7 @@ public class AddToCartPage extends BasePage {
     @FindBy(xpath = "//div[@class='header']/a[@rel='nofollow']")
     private WebElement shoppingCartButton;
 
-    public AddToCartPage chooseColor(Color color) {
+    protected AddToCartPage chooseColor(Color color) {
         switch (color) {
             case BLACK:
                 colors.get(1).click(); // todo dont know why but if using operation and waitUtil - fails on wait visibility of element
@@ -97,7 +97,7 @@ public class AddToCartPage extends BasePage {
         return new ApproveOrderPage();
     }
 
-    public SearchAllProductPage insertTextInSearchFieldAndPressEnter(String text) {
+    protected SearchAllProductPage insertTextInSearchFieldAndPressEnter(String text) {
         operation.insertTextToElement(searchField, text, "search field");
         operation.insertTextToElement(searchField, Keys.ENTER, "search field");
         return new SearchAllProductPage();

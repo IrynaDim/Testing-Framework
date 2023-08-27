@@ -7,6 +7,9 @@ import prestashop.config.Driver;
 import prestashop.config.Reporting;
 import prestashop.exception.FailTest;
 
+//todo is in good idea to add to all methods where I use wait - boolean field isWaitNeed?
+// so If element need to be waited - waitUtil.elementDisplayed will be called. If not - we just click/getText from element without waiting?
+// or its better to create another methods without waiting clickElementWait and clickElement
 public class SoftWebElementAction {
     private final SoftWaitUtil waitUtil = new SoftWaitUtil();
     private final Actions actions = new Actions(Driver.getInstance().getDriver());
@@ -22,6 +25,7 @@ public class SoftWebElementAction {
     public <T> T refreshPage(T page, String pageName) {
         try {
             getDriver().navigate().refresh();
+            getReport().info("Refresh " + pageName);
         } catch (Exception e) {
             getReport().error("Error while refreshing page: " + pageName);
             throw new FailTest(e);

@@ -1,5 +1,9 @@
 package prestashop.pages.shoppingCart;
 
+import prestashop.pages.deliveryPaymentInfo.AddDeliveryPaymentInfoPageAction;
+import prestashop.pages.mainPage.MainPage;
+import prestashop.pages.mainPage.MainPageAction;
+
 import static org.testng.AssertJUnit.assertEquals;
 
 public class ShoppingCartPageAction {
@@ -12,6 +16,20 @@ public class ShoppingCartPageAction {
         return shoppingCartPage.getTotalPrice();
     }
 
+    public ShoppingCartPageAction clearShoppingCart() {
+        shoppingCartPage.clearShoppingCart();
+        return this;
+    }
+
+    public AddDeliveryPaymentInfoPageAction clickProsedButton() {
+        shoppingCartPage.clickProceedButton();
+        return new AddDeliveryPaymentInfoPageAction();
+    }
+
+    public MainPageAction refreshPage() {
+        shoppingCartPage.refreshPage();
+        return new MainPageAction();
+    }
     /**
      * Asserts
      **/

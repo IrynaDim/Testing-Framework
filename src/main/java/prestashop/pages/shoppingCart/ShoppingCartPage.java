@@ -5,6 +5,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import prestashop.config.Driver;
 import prestashop.pages.BasePage;
+import prestashop.pages.deliveryPaymentInfo.AddDeliveryPaymentInfoPage;
 import prestashop.pages.mainPage.MainPage;
 
 import java.util.List;
@@ -28,12 +29,12 @@ public class ShoppingCartPage extends BasePage {
         return operation.getTextFromElement(totalPriceElement, "total price element");
     }
 
-//    public AddDeliveryPaymentInfoPage clickProceedButton() {
-//        wait.until(ExpectedConditions.visibilityOf(proceedButton)).click();
-//        return new AddDeliveryPaymentInfoPage();
-//    }
+    protected AddDeliveryPaymentInfoPage clickProceedButton() {
+        operation.clickElement(proceedButton, "proceed button");
+        return new AddDeliveryPaymentInfoPage();
+    }
 
-    public ShoppingCartPage clearShoppingCart() {
+    protected ShoppingCartPage clearShoppingCart() {
         waitUtil.elementsDisplayed(deleteIcons, "delete icons");
         for (WebElement icon : deleteIcons) {
             icon.click();

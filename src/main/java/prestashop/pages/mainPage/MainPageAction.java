@@ -5,6 +5,7 @@ import prestashop.config.Driver;
 import prestashop.config.Reporting;
 import prestashop.model.Product;
 import prestashop.pages.searchProduct.SearchAllProductPageAction;
+import prestashop.pages.shoppingCart.ShoppingCartPageAction;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,13 +36,12 @@ public class MainPageAction {
         return this;
     }
 
-    public MainPageAction clearShoppingCart() {
+    public ShoppingCartPageAction clickCartButton() {
         if (!mainPage.getAmountOfProductsInShoppingCart().equals("(0)")) {
-            mainPage.clickCartButton()
-                    .clearShoppingCart()
-                    .refreshPage();
+            mainPage.clickCartButton();
+            return new ShoppingCartPageAction();
         }
-        return this;
+        return null;
     }
 
     public List<String> getLanguages() {

@@ -32,7 +32,7 @@ public class BaseTest extends Reporting {
     @BeforeSuite
     public void start(ITestContext iTestContext) {
         intializeReport();
-        Arrays.stream(iTestContext.getAllTestMethods()).forEach(x -> x.setRetryAnalyzerClass(TestNgRetry.class));
+     //   Arrays.stream(iTestContext.getAllTestMethods()).forEach(x -> x.setRetryAnalyzerClass(TestNgRetry.class));
     }
 
     @AfterSuite

@@ -73,7 +73,7 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//span[@class='cart-products-count']")
     private WebElement productsInShoppingCart;
 
-    public ShoppingCartPage clickCartButton() {
+    protected ShoppingCartPage clickCartButton() {
         operation.switchToFrame(framelive, "iframe element");
         operation.clickElement(cartButton, "cart button");
         return new ShoppingCartPage();

@@ -8,5 +8,4 @@ public class SearchAllProductPageAction {
     public AddToCartPageAction clickOnSearchProduct(String name) {
         return searchProductPage.clickOnSearchProduct(name);
     }
-
 }
