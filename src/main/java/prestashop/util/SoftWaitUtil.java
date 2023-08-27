@@ -103,7 +103,7 @@ public class SoftWaitUtil {
         List<WebElement> webElements;
         try {
             if (elements.getClass().getName().contains("By")) {
-                webElements = wait.until(ExpectedConditions.visibilityOfAllElements(getDriver().findElement((By) elements)));
+                webElements = wait.until(ExpectedConditions.visibilityOfAllElements(getDriver().findElements((By) elements)));
             } else {
                 webElements = wait.until(ExpectedConditions.visibilityOfAllElements((List<WebElement>) elements));
             }

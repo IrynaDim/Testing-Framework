@@ -33,12 +33,22 @@ public class SoftWebElementAction {
         return page;
     }
 
-    public <T> void clickElement(T element, String elementName) {
+    public <T> void clickElement(T element, String elementName, Boolean isWaitNeed) {
 
         try {
-            WebElement ele = waitUtil.clickableElement(waitUtil.elementDisplayed(element, elementName), elementName);
-            ele.click();
-            getReport().info("Clicked element : " + elementName);
+            if (isWaitNeed) {
+                WebElement ele = waitUtil.clickableElement(waitUtil.elementDisplayed(element, elementName), elementName);
+                ele.click();
+                getReport().info("Clicked element : " + elementName);
+            } else {
+                if (element.getClass().getName().contains("By")) {
+                    getDriver().findElement((By) element).click();
+                } else {
+                    WebElement ele = (WebElement) element;
+                    ele.click();
+                }
+                getReport().info("Clicked element without waiting: " + elementName);
+            }
         } catch (NoSuchElementException e) {
             getReport().fail("Element is not found :" + elementName);
             throw new FailTest(e);

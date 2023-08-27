@@ -2,9 +2,7 @@ package prestashop.pages.deliveryPaymentInfo;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import prestashop.config.Driver;
+import prestashop.exception.FailTest;
 import prestashop.model.enums.DeliveryType;
 import prestashop.model.enums.PaymentOptions;
 import prestashop.model.enums.SocialTitle;
@@ -15,10 +13,6 @@ import prestashop.pages.orderIsConfirmed.OrderIsConfirmedPage;
 import java.util.List;
 
 public class AddDeliveryPaymentInfoPage extends BasePage {
-
-    public AddDeliveryPaymentInfoPage() {
-        PageFactory.initElements(Driver.getInstance().getDriver(), this);
-    }
 
     @FindBy(xpath = "//input[@name='id_gender']")
     private List<WebElement> genders;
@@ -89,48 +83,48 @@ public class AddDeliveryPaymentInfoPage extends BasePage {
     public AddDeliveryPaymentInfoPage choosePaymentOptions(PaymentOptions option) {
         switch (option) {
             case BY_BANK_WRITE:
-                operation.clickElement(paymentOptions.get(0), "payment option by bank write");
+                operation.clickElement(paymentOptions.get(0), "payment option by bank write", false);
                 break;
             case BY_CASH_ON_DELIVERY:
-                operation.clickElement(paymentOptions.get(1), "payment option by cash on delivery");
+                operation.clickElement(paymentOptions.get(1), "payment option by cash on delivery", false);
                 break;
             case BY_CHECK:
-                operation.clickElement(paymentOptions.get(2), "payment option by check");
+                operation.clickElement(paymentOptions.get(2), "payment option by check", false);
                 break;
         }
         return this;
     }
 
     public AddDeliveryPaymentInfoPage clickIAgreeCheckBox() {
-        operation.clickElement(iAgreeCheckBox, "i agree checkbox");
+        operation.clickElement(iAgreeCheckBox, "i agree checkbox", false);
         return this;
     }
 
     public OrderIsConfirmedPage clickISubmitOrderButton() {
-        operation.clickElement(submitOrderButton, "submit order button");
+        operation.clickElement(submitOrderButton, "submit order button", true);
         return new OrderIsConfirmedPage();
     }
 
     public AddDeliveryPaymentInfoPage chooseDeliveryType(DeliveryType type) {
         switch (type) {
             case PICKUP:
-                operation.clickElement(deliveryType.get(0), "pickup delivery type");
+                operation.clickElement(deliveryType.get(0), "pickup delivery type", true);
                 break;
             case DELIVERY:
-                operation.clickElement(deliveryType.get(1), "delivery type");
+                operation.clickElement(deliveryType.get(1), "delivery type", true);
                 break;
         }
         return this;
     }
 
     public AddDeliveryPaymentInfoPage pressContinueButton(int count) {
-        operation.clickElement(continueButtons.get(count), "continue button with index " + count);
+        operation.clickElement(continueButtons.get(count), "continue button with index " + count, false);
         return this;
     }
 
     public AddDeliveryPaymentInfoPage fillAllCheckbox() {
         for (WebElement webElement : checkboxes) {
-            operation.clickElement(webElement, "click checkbox element");
+            operation.clickElement(webElement, "click checkbox element", true);
         }
         return this;
     }
@@ -138,13 +132,13 @@ public class AddDeliveryPaymentInfoPage extends BasePage {
     public AddDeliveryPaymentInfoPage chooseGender(SocialTitle socialTitle) {
         switch (socialTitle) {
             case MR:
-                operation.clickElement(genders.get(0), "MR social title");
-                break;
+                operation.clickElement(genders.get(0), "MR gender", false);
+                return this;
             case MRS:
-                operation.clickElement(genders.get(1), "MRS social title");
-                break;
+                operation.clickElement(genders.get(1), "MRS gender", false);
+                return this;
         }
-        return this;
+        throw new FailTest("gender was not clicked");
     }
 
     public MainPage refreshPage() {
@@ -157,7 +151,7 @@ public class AddDeliveryPaymentInfoPage extends BasePage {
     }
 
     public AddDeliveryPaymentInfoPage fillAddress(String address) {
-        operation.insertTextToElement(address, address, "address field");
+        operation.insertTextToElement(addressField, address, "address field");
         return this;
     }
 

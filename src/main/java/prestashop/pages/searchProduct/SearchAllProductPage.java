@@ -2,18 +2,13 @@ package prestashop.pages.searchProduct;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import prestashop.config.Driver;
+import prestashop.exception.FailTest;
 import prestashop.pages.BasePage;
-import prestashop.pages.createOrder.AddToCartPageAction;;
+import prestashop.pages.createOrder.AddToCartPageAction;
 
 import java.util.List;
 
 public class SearchAllProductPage extends BasePage {
-
-    public SearchAllProductPage() {
-        PageFactory.initElements(Driver.getInstance().getDriver(), this);
-    }
 
     @FindBy(xpath = "//button[@class='btn-unstyle select-title']")
     private WebElement sortByButton;
@@ -41,10 +36,10 @@ public class SearchAllProductPage extends BasePage {
 
         for (WebElement p : searchProducts) {
             if (p.getText().equalsIgnoreCase(name)) {
-                operation.clickElement(p, name);
-                break;
+                operation.clickElement(p, name, false);
+                return new AddToCartPageAction();
             }
         }
-        return new AddToCartPageAction();
+        throw new FailTest("Product was not clicked: " + name);
     }
 }

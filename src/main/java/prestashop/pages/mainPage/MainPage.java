@@ -4,9 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import prestashop.config.Driver;
 import prestashop.pages.BasePage;
 import prestashop.pages.searchProduct.SearchAllProductPage;
 import prestashop.pages.shoppingCart.ShoppingCartPage;
@@ -17,10 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainPage extends BasePage {
-
-    public MainPage() {
-        PageFactory.initElements(Driver.getInstance().getDriver(), this);
-    }
 
     @FindBy(xpath = "//p[@id='block-newsletter-label']")
     private WebElement emailSubscribeText;
@@ -75,7 +68,7 @@ public class MainPage extends BasePage {
 
     protected ShoppingCartPage clickCartButton() {
         operation.switchToFrame(framelive, "iframe element");
-        operation.clickElement(cartButton, "cart button");
+        operation.clickElement(cartButton, "cart button", true);
         return new ShoppingCartPage();
     }
 
@@ -108,7 +101,7 @@ public class MainPage extends BasePage {
 
     protected List<String> getLanguages() {
         operation.switchToFrame(framelive, "iframe element");
-        operation.clickElement(languageButton, "language button");
+        operation.clickElement(languageButton, "language button", true);
         return waitUtil.elementsDisplayed(languages, "languages list").stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());

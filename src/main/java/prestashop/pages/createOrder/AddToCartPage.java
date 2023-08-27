@@ -3,8 +3,7 @@ package prestashop.pages.createOrder;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import prestashop.config.Driver;
+import prestashop.exception.FailTest;
 import prestashop.model.enums.Color;
 import prestashop.pages.BasePage;
 import prestashop.pages.approveOrder.ApproveOrderPage;
@@ -13,10 +12,6 @@ import prestashop.pages.searchProduct.SearchAllProductPage;
 import java.util.List;
 
 public class AddToCartPage extends BasePage {
-
-    public AddToCartPage() {
-        PageFactory.initElements(Driver.getInstance().getDriver(), this);
-    }
 
     @FindBy(xpath = "//select[@class='form-control form-control-select']")
     private WebElement paperTypeComboBoxButton;
@@ -60,13 +55,13 @@ public class AddToCartPage extends BasePage {
     protected AddToCartPage chooseColor(Color color) {
         switch (color) {
             case BLACK:
-                colors.get(1).click(); // todo dont know why but if using operation and waitUtil - fails on wait visibility of element
-                break;
+                operation.clickElement(colors.get(1), "black color", false); // todo dont know why but if using operation and waitUtil - fails on wait visibility of element
+                return this;
             case WHITE:
-                colors.get(0).click();
-                break;
+                operation.clickElement(colors.get(0), "black color", false);
+                return this;
         }
-        return this;
+        throw new FailTest("Color was not picked");
     }
 
     protected AddToCartPage addProductCustomization(String text) {
@@ -78,7 +73,7 @@ public class AddToCartPage extends BasePage {
 
     protected AddToCartPage clickSaveCustomizationButton() {
         operation.clickElement(saveProductCustomizationButton,
-                "save product customization button");
+                "save product customization button", true);
         waitUtil.elementDisplayed(yourCustomizationText,
                 "Your customization text");
         return this;
@@ -93,7 +88,7 @@ public class AddToCartPage extends BasePage {
     }
 
     protected ApproveOrderPage pressAddToCartButton() {
-        operation.clickElement(addToCartButton, "add to cart button");
+        operation.clickElement(addToCartButton, "add to cart button", true);
         return new ApproveOrderPage();
     }
 

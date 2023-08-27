@@ -1,13 +1,12 @@
 package prestashop.pages.shoppingCart;
 
 import prestashop.pages.deliveryPaymentInfo.AddDeliveryPaymentInfoPageAction;
-import prestashop.pages.mainPage.MainPage;
 import prestashop.pages.mainPage.MainPageAction;
 
 import static org.testng.AssertJUnit.assertEquals;
 
 public class ShoppingCartPageAction {
-    private ShoppingCartPage shoppingCartPage = new ShoppingCartPage();
+    private final ShoppingCartPage shoppingCartPage = new ShoppingCartPage();
 
     /**
      * Actions

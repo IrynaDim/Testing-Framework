@@ -2,8 +2,6 @@ package prestashop.pages.shoppingCart;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import prestashop.config.Driver;
 import prestashop.pages.BasePage;
 import prestashop.pages.deliveryPaymentInfo.AddDeliveryPaymentInfoPage;
 import prestashop.pages.mainPage.MainPage;
@@ -11,10 +9,6 @@ import prestashop.pages.mainPage.MainPage;
 import java.util.List;
 
 public class ShoppingCartPage extends BasePage {
-
-    public ShoppingCartPage() {
-        PageFactory.initElements(Driver.getInstance().getDriver(), this);
-    }
 
     @FindBy(xpath = "//div[@class='cart-summary-line cart-total']/span[@class='value']")
     private WebElement totalPriceElement;
@@ -30,7 +24,7 @@ public class ShoppingCartPage extends BasePage {
     }
 
     protected AddDeliveryPaymentInfoPage clickProceedButton() {
-        operation.clickElement(proceedButton, "proceed button");
+        operation.clickElement(proceedButton, "proceed button", true);
         return new AddDeliveryPaymentInfoPage();
     }
 

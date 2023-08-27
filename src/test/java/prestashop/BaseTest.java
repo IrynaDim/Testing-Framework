@@ -60,7 +60,7 @@ public class BaseTest extends Reporting {
         pageInstances.remove(Thread.currentThread().getId());
     }
 
-    public MainPageAction getMainPageAction(){
+    public MainPageAction getMainPageAction() {
         return pageInstances.get(Thread.currentThread().getId());
     }
 
