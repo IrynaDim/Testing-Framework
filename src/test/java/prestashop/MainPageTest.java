@@ -1,21 +1,30 @@
 package prestashop;
 
+import lombok.extern.slf4j.Slf4j;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import prestashop.util.TestListener;
 
+@Slf4j
+@Listeners(TestListener.class)
 public class MainPageTest extends BaseTest {
 
     @Test
     public void checkUkrainianLanguageExist() {
+        log.info("\n ------------------- checkUkrainianLanguageExist test start --------------------------");
         getMainPageAction()
                 .goToHomePage()
                 .assertThatLanguageIsPresent("Українська");
+        log.info("\n ------------------- checkUkrainianLanguageExist test end --------------------------");
     }
 
     @Test
     public void checkLanguageSize() {
+        log.info("\n ------------------- checkLanguageSize test start --------------------------");
         getMainPageAction()
                 .goToHomePage()
                 .assertLanguageSize(46);
+        log.info("\n ------------------- checkLanguageSize test end --------------------------");
     }
 
     @Test

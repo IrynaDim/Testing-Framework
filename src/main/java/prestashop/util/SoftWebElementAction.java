@@ -1,15 +1,30 @@
 package prestashop.util;
 
 import com.aventstack.extentreports.ExtentTest;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import prestashop.config.Driver;
 import prestashop.config.Reporting;
 import prestashop.exception.FailTest;
 
-//todo is in good idea to add to all methods where I use wait - boolean field isWaitNeed?
-// so If element need to be waited - waitUtil.elementDisplayed will be called. If not - we just click/getText from element without waiting?
-// or its better to create another methods without waiting clickElementWait and clickElement
+//todo is it good idea to add to all methods where I use wait - boolean field isWaitNeed?
+// so If element dont need to be waited - we wont do it? I have several places in the code where
+// I cant use ExpectedConditions.visibilityOf or other wait because I receive error. But without wait it works
+// For example in choosePaymentOptions method or in chooseColor.
+// Maybe I can add this Boolean to all methods?
+
+
+//todo also I dont understand logging. I should double log and report information like I do in the first tree methods
+// for demonstration in this class using private method? Also I have an idea with AOP but im too lazy to implement it)
+// Or how add logger and report in project in correct way?
+// Also should I add logger @Slf4j to all other classes: tests, actions, utils, config? Or not to all classes?
+// I don't really understand if I'm doing logging/reporting it right or not.
+
+
+//todo Does I have enough text information in reports? Or i should write bigger messages?
+
+@Slf4j
 public class SoftWebElementAction {
     private final SoftWaitUtil waitUtil = new SoftWaitUtil();
     private final Actions actions = new Actions(Driver.getInstance().getDriver());
@@ -25,21 +40,21 @@ public class SoftWebElementAction {
     public <T> T refreshPage(T page, String pageName) {
         try {
             getDriver().navigate().refresh();
-            getReport().info("Refresh " + pageName);
+            logActionInfo("Refresh " + pageName);
         } catch (Exception e) {
-            getReport().error("Error while refreshing page: " + pageName);
+            logActionError("Error while refreshing page: " + pageName);
             throw new FailTest(e);
         }
         return page;
     }
-
+// todo is it ok to use Boolean isWaitNeed?
     public <T> void clickElement(T element, String elementName, Boolean isWaitNeed) {
 
         try {
             if (isWaitNeed) {
                 WebElement ele = waitUtil.clickableElement(waitUtil.elementDisplayed(element, elementName), elementName);
                 ele.click();
-                getReport().info("Clicked element : " + elementName);
+                logActionInfo("Clicked element : " + elementName);
             } else {
                 if (element.getClass().getName().contains("By")) {
                     getDriver().findElement((By) element).click();
@@ -47,13 +62,13 @@ public class SoftWebElementAction {
                     WebElement ele = (WebElement) element;
                     ele.click();
                 }
-                getReport().info("Clicked element without waiting: " + elementName);
+                logActionInfo("Clicked element without waiting: " + elementName);
             }
         } catch (NoSuchElementException e) {
-            getReport().fail("Element is not found :" + elementName);
+            logActionError("Element is not found :" + elementName);
             throw new FailTest(e);
         } catch (Exception e1) {
-            getReport().fail("Unable to click element :" + elementName);
+            logActionError("Unable to click element :" + elementName);
             throw new FailTest(e1);
         }
     }
@@ -66,12 +81,12 @@ public class SoftWebElementAction {
             } else {
                 foundElement.sendKeys((Keys) textToEnter);
             }
-            getReport().info("Typed this text : " + textToEnter + ", to the element " + elementName);
+            logActionInfo("Typed this text : " + textToEnter + ", to the element " + elementName);
         } catch (NoSuchElementException e) {
-            getReport().fail("Element is not found: " + elementName);
+            logActionError("Element is not found: " + elementName);
             throw new FailTest(e);
         } catch (Exception e1) {
-            getReport().fail("Unable to click element: " + elementName);
+            logActionError("Unable to click element: " + elementName);
             throw new FailTest(e1);
         }
     }
@@ -141,5 +156,15 @@ public class SoftWebElementAction {
             throw new FailTest(e);
         }
         getReport().info("Insert text using javascript to element: " + elementName);
+    }
+
+    private void logActionInfo(String text) {
+        log.info(text);
+        getReport().info(text);
+    }
+
+    private void logActionError(String text) {
+        log.error(text);
+        getReport().fail(text);
     }
 }

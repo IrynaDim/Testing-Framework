@@ -29,7 +29,6 @@ public class ApproveOrderPage extends BasePage {
     @FindBy(xpath = "//div[@class='cart-content-btn']/a[@class='btn btn-primary']")
     private WebElement proceedToCheckoutButton;
 
-
     protected AddToCartPageAction clickContinueShoppingButton() {
         operation.clickElement(continueShoppingButton, "continue shopping button", true);
         return new AddToCartPageAction();

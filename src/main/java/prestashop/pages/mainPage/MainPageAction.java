@@ -85,55 +85,66 @@ public class MainPageAction {
     /**
      * Asserts
      **/
-    public void assertThatLanguageIsPresent(String language) {
+
+    //todo is it ok to make this methods return MainPageAction? I did it to make possibility to call chains of asserts
+    // or to do other action on the main page
+    public MainPageAction assertThatLanguageIsPresent(String language) {
         long size = getLanguages().stream()
                 .filter(l -> l
                         .equals("Українська"))
                 .count();
         assertEquals("No " + language + " language in the list.", size, 1L);
+        return this;
     }
 
-    public void assertLanguageSize(int size) {
+    public MainPageAction assertLanguageSize(int size) {
         List<String> languages = getLanguages();
         assertEquals("Language size is: " + languages.size(), languages.size(), 46);
+        return this;
     }
 
-    public void assertThatClothesHoverArtIsEmpty() {
+    public MainPageAction assertThatClothesHoverArtIsEmpty() {
         List<String> clothesHoverElements = getArtHoverElements();
         assertEquals("ClothesHoverElements contains " + createStringFromList(clothesHoverElements),
                 clothesHoverElements.size(), 0);
+        return this;
     }
 
-    public void assertThatClothesHoverAccessoriesIsNotEmpty() {
+    public MainPageAction assertThatClothesHoverAccessoriesIsNotEmpty() {
         List<String> clothesHoverElements = getAccessoriesHoverElements();
         assertEquals("Clothes hover element list contains " + createStringFromList(clothesHoverElements), clothesHoverElements.size(), 2);
         assertEquals("First element is " + clothesHoverElements.get(0), clothesHoverElements.get(0), "STATIONERY");
         assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "HOME ACCESSORIES");
+        return this;
     }
 
-    public void assertThatClothesHoverIsNotEmpty() {
+    public MainPageAction assertThatClothesHoverIsNotEmpty() {
         List<String> clothesHoverElements = getClothesHoverElements();
         assertEquals("Clothes hover element list contains: " + createStringFromList(clothesHoverElements), clothesHoverElements.size(), 2);
         assertEquals("First element is " + clothesHoverElements.get(0), clothesHoverElements.get(0), "MEN");
         assertEquals("Second element is" + clothesHoverElements.get(1), clothesHoverElements.get(1), "WOMEN");
+        return this;
     }
 
-    public void assertUnsubscribeText(String text) {
+    public MainPageAction assertUnsubscribeText(String text) {
         String unsubscribeElement = getUnsubscribeText();
         assertEquals("Unsubscribe element text is " + unsubscribeElement, text, unsubscribeElement);
+        return this;
     }
 
-    public void assertEmailSubscribeText(String text) {
+    public MainPageAction assertEmailSubscribeText(String text) {
         String emailSubscribeElement = getEmailSubscribeText();
         assertEquals("Email subscribe element text is " + emailSubscribeElement, text, emailSubscribeElement);
+        return this;
     }
 
-    public void assertSubscribeButtonText(String text) {
+    public MainPageAction assertSubscribeButtonText(String text) {
         String textFromButton = getSubscribeButtonText();
         assertEquals("Text on subscribe button is " + textFromButton, text, textFromButton);
+        return this;
     }
 
-    public void assertPopularClothes(int size) {
+    public MainPageAction assertPopularClothes(int size) {
         List<Product> popularClothes = getPopularProducts();
         Set<Product> uniqueProducts = new HashSet<>(popularClothes);
         assertEquals(popularClothes.size(), uniqueProducts.size());
@@ -144,6 +155,7 @@ public class MainPageAction {
             assertNotNull("Price is null", p.getPrice());
             assertTrue("Price is lower than 0.00: " + p.getPrice(), p.getPrice() > 0.00);
         });
+        return this;
     }
 
     /**

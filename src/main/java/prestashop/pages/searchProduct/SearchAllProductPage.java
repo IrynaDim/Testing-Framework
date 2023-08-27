@@ -1,5 +1,6 @@
 package prestashop.pages.searchProduct;
 
+import lombok.SneakyThrows;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import prestashop.exception.FailTest;
@@ -28,10 +29,15 @@ public class SearchAllProductPage extends BasePage {
     @FindBy(xpath = "//div[@class='js-product product col-xs-12 col-sm-6 col-xl-4']")
     private List<WebElement> products;
 
-    @FindBy(xpath = "//h2[@class='h3 product-title']/a")
+    @FindBy(xpath = ".//h2[@class='h3 product-title']/a")
     private List<WebElement> searchProducts;
 
+    @SneakyThrows
     protected AddToCartPageAction clickOnSearchProduct(String name) {
+        Thread.sleep(500); // todo without this wait it does not work. firefox cant click on any element
+        // chore cant click on the second element is comment Thread.sleep(500); and clearShoppingCartFromMainPage(getMainPageAction());
+        // if comment Thread.sleep(500); but leave clearShoppingCartFromMainPage(getMainPageAction()) - chrome works
+        // why? and is it ok to use small Thread.sleep(500); ?
         waitUtil.elementsDisplayed(searchProducts, "search product " + name);
 
         for (WebElement p : searchProducts) {

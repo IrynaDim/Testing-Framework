@@ -80,7 +80,10 @@ public class AddDeliveryPaymentInfoPage extends BasePage {
         return operation.getTextFromElement(prices.get(1), "shipping price");
     }
 
+// todo I return this in pages to be able to call chain of elements in Action class like I do with filling personal data.
+//  Is it ok?
     public AddDeliveryPaymentInfoPage choosePaymentOptions(PaymentOptions option) {
+        // todo if i use wait here and pass true - i have got an error
         switch (option) {
             case BY_BANK_WRITE:
                 operation.clickElement(paymentOptions.get(0), "payment option by bank write", false);
@@ -95,6 +98,8 @@ public class AddDeliveryPaymentInfoPage extends BasePage {
         return this;
     }
 
+    //todo this checkbox is appear after done some other actions. do i need to check if this method
+    // is called after them? And how could i do it? Should I check the visibility of the elements it depends on? Or how do it?
     public AddDeliveryPaymentInfoPage clickIAgreeCheckBox() {
         operation.clickElement(iAgreeCheckBox, "i agree checkbox", false);
         return this;
