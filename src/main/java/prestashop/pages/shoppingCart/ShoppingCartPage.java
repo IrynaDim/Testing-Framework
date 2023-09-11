@@ -24,7 +24,7 @@ public class ShoppingCartPage extends BasePage {
     }
 
     protected AddDeliveryPaymentInfoPage clickProceedButton() {
-        operation.clickElement(proceedButton, "proceed button", true);
+        operation.clickElement(proceedButton, "proceed button");
         return new AddDeliveryPaymentInfoPage();
     }
 

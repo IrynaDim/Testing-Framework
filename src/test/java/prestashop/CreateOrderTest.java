@@ -17,16 +17,9 @@ import prestashop.util.TestListener;
 @Slf4j
 public class CreateOrderTest extends BaseTest {
 
-    //todo is it ok to has several assesrts in the test and in the middle of test?
-    // .assertThatAmountEqualSubtotalPlusShipping() then do another actions than assert again?
-    // I did everything like in test case 10. So is this correct implementation?
-
     @Test
     public void createOrder_withTwoProducts() {
-        //todo is it ok to separate test methods like this in logger file?
-        log.info("\n ------------------- createOrder_withTwoProducts test start --------------------------");
-        clearShoppingCartFromMainPage(getMainPageAction()); // todo i did it to be sure that shipping cart in empty so it
-        // dont affect on the test. is it ok?
+        clearShoppingCartFromMainPage(getMainPageAction());
 
         getMainPageAction()
                 .enterTextInSearchFieldAndPressEnter("Mug")
@@ -57,7 +50,6 @@ public class CreateOrderTest extends BaseTest {
                 .clickConfirmOrder()
                 .assertOrderIsConfirmedText("\uE876YOUR ORDER IS CONFIRMED")
                 .assertTotalSum("€48.02");
-        log.info("------------------- createOrder_withTwoProducts test end --------------------------");
     }
 
     private void clearShoppingCartFromMainPage(MainPageAction mainPageAction) {

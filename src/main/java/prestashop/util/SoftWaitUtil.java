@@ -1,6 +1,7 @@
 package prestashop.util;
 
 import com.aventstack.extentreports.ExtentTest;
+import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -11,10 +12,10 @@ import prestashop.config.Driver;
 import prestashop.config.Reporting;
 import prestashop.exception.FailTest;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
-
-// todo is this  impl correct? I mean using of try catch everywhere?
 
 public class SoftWaitUtil {
     private final long waitDuration = 20;
@@ -50,7 +51,6 @@ public class SoftWaitUtil {
             } else {
                 webElement = wait.until(ExpectedConditions.elementToBeClickable((WebElement) element));
             }
-
             getReport().info("Successful waiting of element: " + elementName);
         } catch (TimeoutException e) {
             getReport().fail("Time out of waiting clickable of element: " + elementName);

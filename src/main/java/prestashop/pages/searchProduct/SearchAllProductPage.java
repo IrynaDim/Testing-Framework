@@ -34,15 +34,11 @@ public class SearchAllProductPage extends BasePage {
 
     @SneakyThrows
     protected AddToCartPageAction clickOnSearchProduct(String name) {
-        Thread.sleep(500); // todo without this wait it does not work. firefox cant click on any element
-        // chore cant click on the second element is comment Thread.sleep(500); and clearShoppingCartFromMainPage(getMainPageAction());
-        // if comment Thread.sleep(500); but leave clearShoppingCartFromMainPage(getMainPageAction()) - chrome works
-        // why? and is it ok to use small Thread.sleep(500); ?
+        Thread.sleep(300);
         waitUtil.elementsDisplayed(searchProducts, "search product " + name);
-
         for (WebElement p : searchProducts) {
             if (p.getText().equalsIgnoreCase(name)) {
-                operation.clickElement(p, name, false);
+                operation.clickElementWithoutWait(p, name);
                 return new AddToCartPageAction();
             }
         }
