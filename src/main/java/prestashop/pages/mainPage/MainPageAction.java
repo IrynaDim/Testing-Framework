@@ -86,12 +86,10 @@ public class MainPageAction {
      * Asserts
      **/
 
-    //todo is it ok to make this methods return MainPageAction? I did it to make possibility to call chains of asserts
-    // or to do other action on the main page
     public MainPageAction assertThatLanguageIsPresent(String language) {
         long size = getLanguages().stream()
                 .filter(l -> l
-                        .equals("Українська"))
+                        .equals(language))
                 .count();
         assertEquals("No " + language + " language in the list.", size, 1L);
         return this;
@@ -99,7 +97,7 @@ public class MainPageAction {
 
     public MainPageAction assertLanguageSize(int size) {
         List<String> languages = getLanguages();
-        assertEquals("Language size is: " + languages.size(), languages.size(), 46);
+        assertEquals("Language size is: " + languages.size(), languages.size(), size);
         return this;
     }
 

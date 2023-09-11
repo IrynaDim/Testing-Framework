@@ -8,26 +8,14 @@ import prestashop.config.Driver;
 import prestashop.config.Reporting;
 import prestashop.exception.FailTest;
 
-//todo is it good idea to add to all methods where I use wait - boolean field isWaitNeed?
-// so If element dont need to be waited - we wont do it? I have several places in the code where
-// I cant use ExpectedConditions.visibilityOf or other wait because I receive error. But without wait it works
-// For example in choosePaymentOptions method or in chooseColor.
-// Maybe I can add this Boolean to all methods?
-
-
-//todo also I dont understand logging. I should double log and report information like I do in the first tree methods
-// for demonstration in this class using private method? Also I have an idea with AOP but im too lazy to implement it)
-// Or how add logger and report in project in correct way?
-// Also should I add logger @Slf4j to all other classes: tests, actions, utils, config? Or not to all classes?
-// I don't really understand if I'm doing logging/reporting it right or not.
-
-
-//todo Does I have enough text information in reports? Or i should write bigger messages?
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Slf4j
 public class SoftWebElementAction {
     private final SoftWaitUtil waitUtil = new SoftWaitUtil();
     private final Actions actions = new Actions(Driver.getInstance().getDriver());
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private ExtentTest getReport() {
         return Reporting.threadReport.get();
@@ -47,23 +35,30 @@ public class SoftWebElementAction {
         }
         return page;
     }
-// todo is it ok to use Boolean isWaitNeed?
-    public <T> void clickElement(T element, String elementName, Boolean isWaitNeed) {
 
+    public <T> void clickElement(T element, String elementName) {
         try {
-            if (isWaitNeed) {
-                WebElement ele = waitUtil.clickableElement(waitUtil.elementDisplayed(element, elementName), elementName);
-                ele.click();
-                logActionInfo("Clicked element : " + elementName);
+            WebElement ele = waitUtil.clickableElement(waitUtil.elementDisplayed(element, elementName), elementName);
+            ele.click();
+            logActionInfo("Clicked element : " + elementName);
+        } catch (NoSuchElementException e) {
+            logActionError("Element is not found :" + elementName);
+            throw new FailTest(e);
+        } catch (Exception e1) {
+            logActionError("Unable to click element :" + elementName);
+            throw new FailTest(e1);
+        }
+    }
+
+    public <T> void clickElementWithoutWait(T element, String elementName) {
+        try {
+            if (element.getClass().getName().contains("By")) {
+                getDriver().findElement((By) element).click();
             } else {
-                if (element.getClass().getName().contains("By")) {
-                    getDriver().findElement((By) element).click();
-                } else {
-                    WebElement ele = (WebElement) element;
-                    ele.click();
-                }
-                logActionInfo("Clicked element without waiting: " + elementName);
+                WebElement ele = (WebElement) element;
+                ele.click();
             }
+            logActionInfo("Clicked element without waiting: " + elementName);
         } catch (NoSuchElementException e) {
             logActionError("Element is not found :" + elementName);
             throw new FailTest(e);
@@ -94,13 +89,13 @@ public class SoftWebElementAction {
     public <T> String getTextFromElement(T element, String elementName) {
         try {
             String text = waitUtil.elementDisplayed(element, elementName).getText();
-            getReport().info("Fetched this text : \"" + text + "\" from the element: " + elementName);
+            logActionInfo("Fetched this text : \"" + text + "\" from the element: " + elementName);
             return text;
         } catch (NoSuchElementException e) {
-            getReport().fail("Text in element: " + elementName + " is not found.");
+            logActionError("Text in element: " + elementName + " is not found.");
             throw new FailTest(e);
         } catch (Exception e1) {
-            getReport().fail("Unable to fetch text from the element: " + elementName);
+            logActionError("Unable to fetch text from the element: " + elementName);
             throw new FailTest(e1);
         }
 
@@ -110,14 +105,14 @@ public class SoftWebElementAction {
 
         try {
             getDriver().switchTo().defaultContent();
-            getReport().info("Switched to default frame");
+            logActionInfo("Switched to default frame");
             getDriver().switchTo().frame(waitUtil.elementDisplayed(element, elementName));
-            getReport().info("Switched to frame " + elementName);
+            logActionInfo("Switched to frame " + elementName);
         } catch (NoSuchElementException e) {
-            getReport().fail("This frame is not Found: " + elementName);
+            logActionError("This frame is not Found: " + elementName);
             throw new FailTest(e);
         } catch (Exception e1) {
-            getReport().fail("Unable to switched to the frame: " + elementName);
+            logActionError("Unable to switched to the frame: " + elementName);
             throw new FailTest(e1);
         }
     }
@@ -125,13 +120,13 @@ public class SoftWebElementAction {
     public <T> void moveToElement(T element, String elementName) {
         try {
             actions.moveToElement(waitUtil.elementDisplayed(element, elementName)).perform();
-            getReport().info("Moved to element: " + elementName);
+            logActionInfo("Moved to element: " + elementName);
 
         } catch (NoSuchElementException e) {
-            getReport().fail("No such element: " + elementName);
+            logActionError("No such element: " + elementName);
             throw new FailTest(e);
         } catch (Exception e1) {
-            getReport().fail("Unable to move to the element: " + elementName);
+            logActionError("Unable to move to the element: " + elementName);
             throw new FailTest(e1);
         }
     }
@@ -141,12 +136,12 @@ public class SoftWebElementAction {
         WebElement foundElement;
         try {
             foundElement = waitUtil.elementDisplayed(element, elementName);
-            getReport().info("Found element: " + elementName);
+            logActionInfo("Found element: " + elementName);
         } catch (NoSuchElementException e) {
-            getReport().fail("No such element: " + elementName);
+            logActionError("No such element: " + elementName);
             throw new FailTest(e);
         } catch (Exception e1) {
-            getReport().fail("Unable to move to the element: " + elementName);
+            logActionError("Unable to move to the element: " + elementName);
             throw new FailTest(e1);
         }
         try {
@@ -157,14 +152,14 @@ public class SoftWebElementAction {
         }
         getReport().info("Insert text using javascript to element: " + elementName);
     }
-
     private void logActionInfo(String text) {
-        log.info(text);
+        log.info(text + " with Thread id " + Thread.currentThread().getId() + " and time " + timeFormat.format(new Date()));
         getReport().info(text);
     }
 
     private void logActionError(String text) {
-        log.error(text);
+
+        log.error(text + " with Thread id " + Thread.currentThread().getId() + " and time " + timeFormat.format(new Date()));
         getReport().fail(text);
     }
 }

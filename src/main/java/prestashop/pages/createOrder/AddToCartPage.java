@@ -55,10 +55,10 @@ public class AddToCartPage extends BasePage {
     protected AddToCartPage chooseColor(Color color) {
         switch (color) {
             case BLACK:
-                operation.clickElement(colors.get(1), "black color", false); // todo dont know why but if using operation and waitUtil - fails on wait visibility of element
+                operation.clickElementWithoutWait(colors.get(1), "black color");
                 return this;
             case WHITE:
-                operation.clickElement(colors.get(0), "black color", false);
+                operation.clickElementWithoutWait(colors.get(0), "black color");
                 return this;
         }
         throw new FailTest("Color was not picked");
@@ -73,7 +73,7 @@ public class AddToCartPage extends BasePage {
 
     protected AddToCartPage clickSaveCustomizationButton() {
         operation.clickElement(saveProductCustomizationButton,
-                "save product customization button", true);
+                "save product customization button");
         waitUtil.elementDisplayed(yourCustomizationText,
                 "Your customization text");
         return this;
@@ -88,7 +88,7 @@ public class AddToCartPage extends BasePage {
     }
 
     protected ApproveOrderPage pressAddToCartButton() {
-        operation.clickElement(addToCartButton, "add to cart button", true);
+        operation.clickElement(addToCartButton, "add to cart button");
         return new ApproveOrderPage();
     }
 

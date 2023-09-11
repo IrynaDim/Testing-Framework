@@ -11,20 +11,16 @@ public class MainPageTest extends BaseTest {
 
     @Test
     public void checkUkrainianLanguageExist() {
-        log.info("\n ------------------- checkUkrainianLanguageExist test start --------------------------");
         getMainPageAction()
                 .goToHomePage()
                 .assertThatLanguageIsPresent("Українська");
-        log.info("\n ------------------- checkUkrainianLanguageExist test end --------------------------");
     }
 
     @Test
     public void checkLanguageSize() {
-        log.info("\n ------------------- checkLanguageSize test start --------------------------");
         getMainPageAction()
                 .goToHomePage()
                 .assertLanguageSize(46);
-        log.info("\n ------------------- checkLanguageSize test end --------------------------");
     }
 
     @Test

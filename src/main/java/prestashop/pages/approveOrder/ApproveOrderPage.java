@@ -30,12 +30,12 @@ public class ApproveOrderPage extends BasePage {
     private WebElement proceedToCheckoutButton;
 
     protected AddToCartPageAction clickContinueShoppingButton() {
-        operation.clickElement(continueShoppingButton, "continue shopping button", true);
+        operation.clickElement(continueShoppingButton, "continue shopping button");
         return new AddToCartPageAction();
     }
 
     protected ShoppingCartPage clickProceedToCheckoutButton() {
-        operation.clickElement(proceedToCheckoutButton, "proceed  to checkout button", true);
+        operation.clickElement(proceedToCheckoutButton, "proceed  to checkout button");
         return new ShoppingCartPage();
     }
 }

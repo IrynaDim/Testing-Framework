@@ -3,6 +3,7 @@ package prestashop;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
+@Slf4j
 public class BaseTest extends Reporting {
     private static final Map<Long, MainPageAction> pageInstances = new ConcurrentHashMap<>();
     private final String startPage = "https://demo.prestashop.com/#/en/front";
@@ -46,6 +48,8 @@ public class BaseTest extends Reporting {
         ExtentTest test = report.createTest(result.getName());
         Reporting.threadReport.set(test);
         pageInstances.putIfAbsent(Thread.currentThread().getId(), new MainPageAction());
+        log.info("\n -------------------" + result.getName() + " test START with tread id "
+                + Thread.currentThread().getId());
     }
 
     @AfterMethod
@@ -58,6 +62,8 @@ public class BaseTest extends Reporting {
         Driver.getInstance().removeDriver();
         Reporting.threadReport.remove();
         pageInstances.remove(Thread.currentThread().getId());
+        log.info("\n -------------------" + result.getName() + " test END with tread id "
+                + Thread.currentThread().getId());
     }
 
     public MainPageAction getMainPageAction() {

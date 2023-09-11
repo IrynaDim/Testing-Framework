@@ -80,56 +80,51 @@ public class AddDeliveryPaymentInfoPage extends BasePage {
         return operation.getTextFromElement(prices.get(1), "shipping price");
     }
 
-// todo I return this in pages to be able to call chain of elements in Action class like I do with filling personal data.
-//  Is it ok?
     public AddDeliveryPaymentInfoPage choosePaymentOptions(PaymentOptions option) {
-        // todo if i use wait here and pass true - i have got an error
         switch (option) {
             case BY_BANK_WRITE:
-                operation.clickElement(paymentOptions.get(0), "payment option by bank write", false);
+                operation.clickElementWithoutWait(paymentOptions.get(0), "payment option by bank write");
                 break;
             case BY_CASH_ON_DELIVERY:
-                operation.clickElement(paymentOptions.get(1), "payment option by cash on delivery", false);
+                operation.clickElementWithoutWait(paymentOptions.get(1), "payment option by cash on delivery");
                 break;
             case BY_CHECK:
-                operation.clickElement(paymentOptions.get(2), "payment option by check", false);
+                operation.clickElementWithoutWait(paymentOptions.get(2), "payment option by check");
                 break;
         }
         return this;
     }
 
-    //todo this checkbox is appear after done some other actions. do i need to check if this method
-    // is called after them? And how could i do it? Should I check the visibility of the elements it depends on? Or how do it?
     public AddDeliveryPaymentInfoPage clickIAgreeCheckBox() {
-        operation.clickElement(iAgreeCheckBox, "i agree checkbox", false);
+        operation.clickElementWithoutWait(iAgreeCheckBox, "i agree checkbox");
         return this;
     }
 
     public OrderIsConfirmedPage clickISubmitOrderButton() {
-        operation.clickElement(submitOrderButton, "submit order button", true);
+        operation.clickElement(submitOrderButton, "submit order button");
         return new OrderIsConfirmedPage();
     }
 
     public AddDeliveryPaymentInfoPage chooseDeliveryType(DeliveryType type) {
         switch (type) {
             case PICKUP:
-                operation.clickElement(deliveryType.get(0), "pickup delivery type", true);
+                operation.clickElement(deliveryType.get(0), "pickup delivery type");
                 break;
             case DELIVERY:
-                operation.clickElement(deliveryType.get(1), "delivery type", true);
+                operation.clickElement(deliveryType.get(1), "delivery type");
                 break;
         }
         return this;
     }
 
     public AddDeliveryPaymentInfoPage pressContinueButton(int count) {
-        operation.clickElement(continueButtons.get(count), "continue button with index " + count, false);
+        operation.clickElementWithoutWait(continueButtons.get(count), "continue button with index " + count);
         return this;
     }
 
     public AddDeliveryPaymentInfoPage fillAllCheckbox() {
         for (WebElement webElement : checkboxes) {
-            operation.clickElement(webElement, "click checkbox element", true);
+            operation.clickElement(webElement, "click checkbox element");
         }
         return this;
     }
@@ -137,10 +132,10 @@ public class AddDeliveryPaymentInfoPage extends BasePage {
     public AddDeliveryPaymentInfoPage chooseGender(SocialTitle socialTitle) {
         switch (socialTitle) {
             case MR:
-                operation.clickElement(genders.get(0), "MR gender", false);
+                operation.clickElementWithoutWait(genders.get(0), "MR gender");
                 return this;
             case MRS:
-                operation.clickElement(genders.get(1), "MRS gender", false);
+                operation.clickElementWithoutWait(genders.get(1), "MRS gender");
                 return this;
         }
         throw new FailTest("gender was not clicked");

@@ -68,7 +68,7 @@ public class MainPage extends BasePage {
 
     protected ShoppingCartPage clickCartButton() {
         operation.switchToFrame(framelive, "iframe element");
-        operation.clickElement(cartButton, "cart button", true);
+        operation.clickElement(cartButton, "cart button");
         return new ShoppingCartPage();
     }
 
@@ -101,7 +101,7 @@ public class MainPage extends BasePage {
 
     protected List<String> getLanguages() {
         operation.switchToFrame(framelive, "iframe element");
-        operation.clickElement(languageButton, "language button", true);
+        operation.clickElement(languageButton, "language button");
         return waitUtil.elementsDisplayed(languages, "languages list").stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
